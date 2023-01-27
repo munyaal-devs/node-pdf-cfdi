@@ -1,0 +1,22 @@
+import { CodigoPostalType } from ".";
+export type AttributesComprobanteElement = {
+    Version?: '4.0' | string;
+    Serie?: string;
+    Folio?: string;
+    Fecha: string;
+    Sello?: string;
+    FormaPago?: string;
+    NoCertificado?: string;
+    Certificado?: string;
+    CondicionesDePago?: string;
+    SubTotal: string;
+    Descuento?: string;
+    Moneda: string;
+    TipoCambio?: string;
+    Total: string;
+    TipoDeComprobante: string;
+    Exportacion: string;
+    MetodoPago?: string;
+    LugarExpedicion: CodigoPostalType;
+    Confirmacion?: string;
+};

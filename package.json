@@ -17,6 +17,8 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "pdfmake": "^0.2.7"
+    "@munyaal/cfdi-catalogs": "^1.0.0-beta.2",
+    "pdfmake": "^0.2.7",
+    "xml-js": "^1.6.11"
   }
 }

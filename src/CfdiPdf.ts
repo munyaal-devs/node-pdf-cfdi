@@ -11,30 +11,41 @@ import {
     pdfmakeTableZebraLayout
 } from "./pdfmake.config";
 import { currency } from "./helpers";
+import { ComprobanteJson } from "./types/index"
+import { xml2js } from "xml-js";
 
 PdfMake.vfs = fontBase64;
 
 export class CfdiPdf {
     private _definition!: TDocumentDefinitions;
+    private data!: ComprobanteJson;
 
-    constructor() {
+    constructor(
+        xml: string
+    ) {
+        this.getData(xml);
         this.buildDefinition();
+    }
+
+    private getData(xml: string) {
+        const convert = xml2js(xml);
+        console.log(JSON.stringify(convert,null,3))
     }
 
     private emisor(): Content {
         return [
-            {text: 'MARIA WATEMBER TORRES', bold: true, fontSize: 10},
+            { text: 'MARIA WATEMBER TORRES', bold: true, fontSize: 10 },
             '\n',
             'RFC: ',
-            {text: 'WATM640917J45', bold: true},
+            { text: 'WATM640917J45', bold: true },
             '\n\n',
-            {text: 'Régimen fiscal: '},
+            { text: 'Régimen fiscal: ' },
             {
                 text: '612 - Personas Físicas con Actividades Empresariales y Profesionales',
                 bold: true,
             },
             '\n',
-            {text: 'Número de certificado: '},
+            { text: 'Número de certificado: ' },
             {
                 text: '30001000000400002333',
                 bold: true,
@@ -59,16 +70,16 @@ export class CfdiPdf {
                         text: [
                             'Serie',
                             '\n',
-                            {text: 'A', bold: true,}
+                            { text: 'A', bold: true, }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
                     },
                     {
                         text: [
-                            {text: 'Folio', style: 'tableCell'},
+                            { text: 'Folio', style: 'tableCell' },
                             '\n',
-                            {text: 'MYLF-190', bold: true}
+                            { text: 'MYLF-190', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -79,7 +90,7 @@ export class CfdiPdf {
                         text: [
                             'Lugar de emisión',
                             '\n',
-                            {text: '77725', bold: true}
+                            { text: '77725', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -89,7 +100,7 @@ export class CfdiPdf {
                         text: [
                             'Fecha y hora de emisión',
                             '\n',
-                            {text: '21 Jul. 2022 - 12:50:28', bold: true}
+                            { text: '21 Jul. 2022 - 12:50:28', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -122,7 +133,7 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'RFC: ',
-                            {text: 'MODC980924HK1', bold: true}
+                            { text: 'MODC980924HK1', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -133,7 +144,7 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'Régimen Fiscal: ',
-                            {text: '612 - Personas Físicas con Actividades Empresariales y Profesionales', bold: true}
+                            { text: '612 - Personas Físicas con Actividades Empresariales y Profesionales', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -144,7 +155,7 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'Domicilio fiscal: ',
-                            {text: '77725', bold: true}
+                            { text: '77725', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -171,16 +182,16 @@ export class CfdiPdf {
                         text: [
                             'Uso del CFDI',
                             '\n',
-                            {text: 'G03 - Gastos en general', bold: true,}
+                            { text: 'G03 - Gastos en general', bold: true, }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
                     },
                     {
                         text: [
-                            {text: 'Exportación', style: 'tableCell'},
+                            { text: 'Exportación', style: 'tableCell' },
                             '\n',
-                            {text: '01 - No aplica', bold: true}
+                            { text: '01 - No aplica', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -191,7 +202,7 @@ export class CfdiPdf {
                         text: [
                             'Método de pago',
                             '\n',
-                            {text: 'PUE - Pago en una sola exhibición', bold: true}
+                            { text: 'PUE - Pago en una sola exhibición', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -201,7 +212,7 @@ export class CfdiPdf {
                         text: [
                             'Forma de pago',
                             '\n',
-                            {text: '01 - Efectivo', bold: true}
+                            { text: '01 - Efectivo', bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -312,9 +323,9 @@ export class CfdiPdf {
                         table: {
                             widths: ['*'],
                             body: [
-                                [{text: 'Subtotal', alignment: 'right'}],
-                                [{text: 'Descuento', alignment: 'right'}],
-                                [{text: 'IVA Trasladado (16%)', alignment: 'right'}],
+                                [{ text: 'Subtotal', alignment: 'right' }],
+                                [{ text: 'Descuento', alignment: 'right' }],
+                                [{ text: 'IVA Trasladado (16%)', alignment: 'right' }],
                             ]
                         }
                     },
@@ -324,9 +335,9 @@ export class CfdiPdf {
                         table: {
                             widths: ['*'],
                             body: [
-                                [{text: currency(431.04), alignment: 'right', bold: true}],
-                                [{text: currency(31.04), alignment: 'right', bold: true}],
-                                [{text: currency(64), alignment: 'right', bold: true}],
+                                [{ text: currency(431.04), alignment: 'right', bold: true }],
+                                [{ text: currency(31.04), alignment: 'right', bold: true }],
+                                [{ text: currency(64), alignment: 'right', bold: true }],
                             ]
                         }
                     },
@@ -341,8 +352,8 @@ export class CfdiPdf {
                             {
                                 fontSize: 10,
                                 text: [
-                                    {text: 'Total '},
-                                    {text: currency(464), bold: true}
+                                    { text: 'Total ' },
+                                    { text: currency(464), bold: true }
                                 ],
                                 alignment: 'right'
                             },
@@ -531,7 +542,7 @@ export class CfdiPdf {
             ],
             footer: (currentPage, pageCount) => {
                 return [
-                    {columns: this.footer(currentPage, pageCount)}
+                    { columns: this.footer(currentPage, pageCount) }
                 ]
             },
             styles: pdfmakeStyles,
