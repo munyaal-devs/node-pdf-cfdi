@@ -1,6 +1,7 @@
-import { 
+import { ConceptoComplementoIeduElement } from "../complements";
+import {
     AttributesComprobanteConceptoElement,
-    AttributesComprobanteEmisorElement ,
+    AttributesComprobanteEmisorElement,
     AttributesComprobanteImpuestosElement,
     AttributesComprobanteReceptorElement,
     AttributesComprobanteInformacionGlobalElement,
@@ -14,40 +15,54 @@ import {
 } from "./index";
 
 export type ComprobanteJson = {
-InformacionGlobal?: AttributesComprobanteInformacionGlobalElement;
-CfdiRelacionados: ComprobanteCfdiRelacionados[];
-Emisor: AttributesComprobanteEmisorElement;
-Receptor: AttributesComprobanteReceptorElement;
-Conceptos: AttributesComprobanteConceptoElement[];
-Impuestos?: AttributesComprobanteImpuestosElement;
-Complemento: ComprobanteComplemento;
-Version: string;
-Serie?: string;
-Folio?: string;
-Fecha: string;
-Sello?: string;
-FormaPago?: string;
-NoCertificado?: string;
-Certificado?: string;
-CondicionesDePago?: string;
-SubTotal: string;
-Descuento?: string;
-Moneda: string;
-TipoCambio?: string;
-Total: string;
-TipoDeComprobante: string;
-Exportacion: string;
-MetodoPago?: string;
-LugarExpedicion: string;
-Confirmacion?: string;
+    InformacionGlobal?: AttributesComprobanteInformacionGlobalElement;
+    CfdiRelacionados: ComprobanteCfdiRelacionados[];
+    Emisor: AttributesComprobanteEmisorElement;
+    Receptor: AttributesComprobanteReceptorElement;
+    Conceptos: ComprobanteConcepto[];
+    Impuestos?: AttributesComprobanteImpuestosElement;
+    Complemento: ComprobanteComplemento;
+    Version: string;
+    Serie?: string;
+    Folio?: string;
+    Fecha: string;
+    Sello?: string;
+    FormaPago?: string;
+    NoCertificado?: string;
+    Certificado?: string;
+    CondicionesDePago?: string;
+    SubTotal: string;
+    Descuento?: string;
+    Moneda: string;
+    TipoCambio?: string;
+    Total: string;
+    TipoDeComprobante: string;
+    Exportacion: string;
+    MetodoPago?: string;
+    LugarExpedicion: string;
+    Confirmacion?: string;
 }
 
-type ComprobanteComplemento = {
+export type ComprobanteComplemento = {
+    TimbreFiscalDigital: ComplementoTimbreFiscal
+};
+
+export type ComplementoTimbreFiscal = {
+    Version: string;
+    UUID: string;
+    FechaTimbrado: string;
+    RfcProvCertif: string;
+    SelloCFD: string;
+    NoCertificadoSAT: string;
+    SelloSAT: string;
+}
+
+export type ComprobanteConcepto = {
     Impuestos?: ComprobanteConceptoImpuestos;
-    ACuentaTerceros?: AttributesComprobanteConceptoACuentaTercerosElement;
-    InformacionAduanera: AttributesComprobanteConceptoInformacionAduaneraElement[];
-    CuentaPredial: AttributesComprobanteConceptoCuentaPredialElement[];
-    Parte: AttributesComprobanteConceptoParteElement[];
+    //ACuentaTerceros?: ComprobanteConceptoACuentaTerceros;
+    //InformacionAduanera: ComprobanteConceptoInformacionAduanera[];
+    //CuentaPredial: ComprobanteConceptoCuentaPredial[];
+    //Parte: ComprobanteConceptoParte[];
     ComplementoConcepto?: ComprobanteConceptoComplementoConcepto;
     ClaveProdServ: string;
     NoIdentificacion?: string;
@@ -59,19 +74,19 @@ type ComprobanteComplemento = {
     Importe: string;
     Descuento?: string;
     ObjetoImp: string;
-};
+}
 
-type ComprobanteConceptoImpuestos = {
+export type ComprobanteConceptoImpuestos = {
     Traslados: AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement[];
     Retenciones: AttributesComprobanteConceptoImpuestosRetencionesRetencionElement[];
 };
 
-type ComprobanteCfdiRelacionados = {
+export type ComprobanteCfdiRelacionados = {
     TipoRelacion: string;
     CfdiRelacionado: AttributesComprobanteCfdiRelacionadosConCfdiRelacionadoElement[];
 }
 
 
-type ComprobanteConceptoComplementoConcepto = {
-    //iedu?: Iedu
+export type ComprobanteConceptoComplementoConcepto = {
+    iedu?: ConceptoComplementoIeduElement
 }

@@ -11,34 +11,116 @@ const fs_1 = require("fs");
 const pdfmake_config_1 = require("./pdfmake.config");
 const helpers_1 = require("./helpers");
 const xml_js_1 = require("xml-js");
+const cfdi_catalogs_1 = require("@munyaal/cfdi-catalogs");
+const src_1 = require("@munyaal/cfdi-catalogs/dist/src");
 pdfmake_1.default.vfs = fontBase64_1.fontBase64;
 class CfdiPdf {
     _definition;
     data;
-    constructor(xml) {
+    constructor(xml
+    // pedir cadena original del timbre
+    ) {
         this.getData(xml);
         this.buildDefinition();
     }
     getData(xml) {
         const convert = (0, xml_js_1.xml2js)(xml);
-        console.log(JSON.stringify(convert, null, 3));
+        convert.elements;
+        if (convert.elements && convert.elements?.length > 0) {
+            this.data = { ...convert.elements[0].attributes };
+            if (convert.elements[0].elements) {
+                for (let index = 0; index < convert.elements[0].elements.length; index++) {
+                    switch (convert.elements[0].elements[index].name) {
+                        case "cfdi:Emisor":
+                            this.data.Emisor = { ...convert.elements[0].elements[index].attributes };
+                            break;
+                        case "cfdi:Receptor":
+                            this.data.Receptor = { ...convert.elements[0].elements[index].attributes };
+                            break;
+                        case "cfdi:Conceptos":
+                            this.data = Object.assign(this.data, {
+                                Conceptos: [],
+                            });
+                            this.getDataConcept(convert.elements[0].elements[index].elements || []);
+                            break;
+                        case "cfdi:Impuestos":
+                            this.data.Impuestos = { ...convert.elements[0].elements[index].attributes };
+                            break;
+                        case "cfdi:Complemento":
+                            this.getDataComplement(convert.elements[0].elements[index].elements || []);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    getDataComplement(complement) {
+        for (let index = 0; index < complement.length; index++) {
+            switch (complement[index].name) {
+                case "tfd:TimbreFiscalDigital":
+                    this.data = Object.assign(this.data, {
+                        Complemento: {
+                            TimbreFiscalDigital: { ...complement[index].attributes }
+                        },
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    getDataConcept(ctp) {
+        for (let i = 0; i < ctp.length; i++) {
+            if (ctp[i].name = "cfdi:Concepto") {
+                let objctp = { ...ctp[i].attributes };
+                const elementCtpI = ctp[i].elements || [];
+                if (elementCtpI.length > 0) {
+                    for (let j = 0; j < elementCtpI.length; j++) {
+                        switch (elementCtpI[j].name) {
+                            case "cfdi:ComplementoConcepto":
+                                const elementCtpJ = elementCtpI[j].elements || [];
+                                if (elementCtpJ.length > 0)
+                                    for (let k = 0; k < elementCtpJ.length; k++) {
+                                        switch (elementCtpJ[k].name) {
+                                            case "iedu:instEducativas":
+                                                objctp = Object.assign(objctp, {
+                                                    ComplementoConcepto: {
+                                                        iedu: { ...elementCtpJ[k].attributes }
+                                                    }
+                                                });
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                this.data.Conceptos.push(objctp);
+            }
+        }
     }
     emisor() {
         return [
-            { text: 'MARIA WATEMBER TORRES', bold: true, fontSize: 10 },
+            { text: `${this.data.Emisor.Nombre}`, bold: true, fontSize: 10 },
             '\n',
             'RFC: ',
-            { text: 'WATM640917J45', bold: true },
+            { text: `${this.data.Emisor.Rfc}`, bold: true },
             '\n\n',
             { text: 'Régimen fiscal: ' },
             {
-                text: '612 - Personas Físicas con Actividades Empresariales y Profesionales',
+                text: `${this.data.Emisor.RegimenFiscal} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Emisor.RegimenFiscal, src_1.CatalogEnum.RegimenFiscal)?.description}`,
                 bold: true,
             },
             '\n',
             { text: 'Número de certificado: ' },
             {
-                text: '30001000000400002333',
+                text: `${this.data.NoCertificado}`,
                 bold: true,
             },
         ];
@@ -60,7 +142,7 @@ class CfdiPdf {
                         text: [
                             'Serie',
                             '\n',
-                            { text: 'A', bold: true, }
+                            { text: `${this.data.Serie}`, bold: true, }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -69,7 +151,7 @@ class CfdiPdf {
                         text: [
                             { text: 'Folio', style: 'tableCell' },
                             '\n',
-                            { text: 'MYLF-190', bold: true }
+                            { text: `${this.data.Folio}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -81,7 +163,7 @@ class CfdiPdf {
                         text: [
                             'Lugar de emisión',
                             '\n',
-                            { text: '77725', bold: true }
+                            { text: `${this.data.LugarExpedicion}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -91,7 +173,7 @@ class CfdiPdf {
                         text: [
                             'Fecha y hora de emisión',
                             '\n',
-                            { text: '21 Jul. 2022 - 12:50:28', bold: true }
+                            { text: `${this.data.Fecha}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -113,7 +195,7 @@ class CfdiPdf {
                     }],
                 [
                     {
-                        text: 'CALEB ISAAC MORA DIAZ',
+                        text: `${this.data.Receptor.Nombre}`,
                         bold: true,
                         style: 'tableCell',
                         alignment: 'left',
@@ -124,7 +206,7 @@ class CfdiPdf {
                         width: '*',
                         text: [
                             'RFC: ',
-                            { text: 'MODC980924HK1', bold: true }
+                            { text: `${this.data.Receptor.Rfc}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -135,7 +217,7 @@ class CfdiPdf {
                         width: '*',
                         text: [
                             'Régimen Fiscal: ',
-                            { text: '612 - Personas Físicas con Actividades Empresariales y Profesionales', bold: true }
+                            { text: `${this.data.Receptor.RegimenFiscalReceptor} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.RegimenFiscalReceptor, src_1.CatalogEnum.RegimenFiscal)?.description}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -146,7 +228,7 @@ class CfdiPdf {
                         width: '*',
                         text: [
                             'Domicilio fiscal: ',
-                            { text: '77725', bold: true }
+                            { text: `${this.data.Receptor.DomicilioFiscalReceptor}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -172,7 +254,7 @@ class CfdiPdf {
                         text: [
                             'Uso del CFDI',
                             '\n',
-                            { text: 'G03 - Gastos en general', bold: true, }
+                            { text: `${this.data.Receptor.UsoCFDI} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.UsoCFDI, src_1.CatalogEnum.UsoCFDI)?.description}`, bold: true, }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -181,7 +263,7 @@ class CfdiPdf {
                         text: [
                             { text: 'Exportación', style: 'tableCell' },
                             '\n',
-                            { text: '01 - No aplica', bold: true }
+                            { text: `${this.data.Exportacion}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -193,7 +275,7 @@ class CfdiPdf {
                         text: [
                             'Método de pago',
                             '\n',
-                            { text: 'PUE - Pago en una sola exhibición', bold: true }
+                            { text: `${this.data.MetodoPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.MetodoPago || "", src_1.CatalogEnum.MetodoPago)?.description}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -203,7 +285,7 @@ class CfdiPdf {
                         text: [
                             'Forma de pago',
                             '\n',
-                            { text: '01 - Efectivo', bold: true }
+                            { text: `${this.data.FormaPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.FormaPago || "", src_1.CatalogEnum.FormaPago)?.description}`, bold: true }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -212,46 +294,58 @@ class CfdiPdf {
             ]
         };
     }
-    concept(index) {
+    concept(value) {
+        const table = [
+            [{
+                    text: `${value.Descripcion}`,
+                }],
+            [{
+                    text: `Código SAT: ${value.ClaveProdServ} Unidad SAT: ${value.ClaveUnidad} Objeto Impuesto: ${value.ObjetoImp} - ${(0, cfdi_catalogs_1.searchOption)(value.ObjetoImp, src_1.CatalogEnum.ObjetoImp)?.description}`,
+                    fontSize: 6,
+                    lineHeight: 1
+                }],
+            [{
+                    text: `Impuesto: IVA Tipo factor: Tasa Tasa o cuota: 0.16 Base: $ 107.76 Importe: $ 17.24`,
+                    fontSize: 6,
+                    lineHeight: 1
+                }]
+        ];
+        if (value.ComplementoConcepto) {
+            if (value.ComplementoConcepto.iedu) {
+                table.push([
+                    {
+                        text: `Alumno: ${value.ComplementoConcepto.iedu.nombreAlumno} | CURP: ${value.ComplementoConcepto.iedu.CURP} | Nivel educativo: ${value.ComplementoConcepto.iedu.nivelEducativo} | Clave: ${value.ComplementoConcepto.iedu.autRVOE} | RFC: ${value.ComplementoConcepto.iedu.rfcPago}`,
+                        fontSize: 6,
+                        lineHeight: 1
+                    }
+                ]);
+            }
+        }
         return {
             widths: ['*'],
-            body: [
-                [{
-                        text: `Producto ${index + 1}`,
-                    }],
-                [{
-                        text: 'Código SAT: 95141904 Unidad SAT: H87 Objeto Impuesto: 02 - Sí objeto de impuesto',
-                        fontSize: 6,
-                        lineHeight: 1
-                    }],
-                [{
-                        text: 'Impuesto: IVA Tipo factor: Tasa Tasa o cuota: 0.16 Base: $ 107.76 Importe: $ 17.24',
-                        fontSize: 6,
-                        lineHeight: 1
-                    }]
-            ]
+            body: table
         };
     }
     concepts() {
-        const concepts = [1, 2, 3, 4].map(value => ([
+        const concepts = this.data.Conceptos.map(value => ([
             {
                 layout: 'noBorders',
                 table: this.concept(value)
             },
             {
-                text: (0, helpers_1.currency)(107.76),
+                text: (0, helpers_1.currency)(parseFloat(`${value.ValorUnitario}`)),
                 alignment: 'right',
             },
             {
-                text: (1).toFixed(2),
+                text: value.Cantidad,
                 alignment: 'right',
             },
             {
-                text: (0, helpers_1.currency)(107.76),
+                text: (0, helpers_1.currency)(parseFloat(`${value.Importe}`)),
                 alignment: 'right',
             },
             {
-                text: (0, helpers_1.currency)(7.76),
+                text: (0, helpers_1.currency)(parseFloat(`${value.Descuento}`)),
                 alignment: 'right',
             }
         ]));
@@ -321,9 +415,9 @@ class CfdiPdf {
                         table: {
                             widths: ['*'],
                             body: [
-                                [{ text: (0, helpers_1.currency)(431.04), alignment: 'right', bold: true }],
-                                [{ text: (0, helpers_1.currency)(31.04), alignment: 'right', bold: true }],
-                                [{ text: (0, helpers_1.currency)(64), alignment: 'right', bold: true }],
+                                [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.SubTotal}`)), alignment: 'right', bold: true }],
+                                [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.Descuento}`)), alignment: 'right', bold: true }],
+                                [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)), alignment: 'right', bold: true }],
                             ]
                         }
                     },
@@ -339,7 +433,7 @@ class CfdiPdf {
                                 fontSize: 10,
                                 text: [
                                     { text: 'Total ' },
-                                    { text: (0, helpers_1.currency)(464), bold: true }
+                                    { text: (0, helpers_1.currency)(parseFloat(`${this.data.Total}`)), bold: true }
                                 ],
                                 alignment: 'right'
                             },
@@ -434,7 +528,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: '1cbec0ea-6a29-4628-a822-9a170e20cd4e',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.UUID}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }],
@@ -444,7 +538,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: 'SPR190613I52',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.RfcProvCertif}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }],
@@ -474,7 +568,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: '30001000000400002495',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.NoCertificadoSAT}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }],
@@ -484,7 +578,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: 'QSbEuH9+qJ1uA2S7z04nsFT/hufLYg5xPFXsgtMZwdrjLT/23MZVx326xhhQbbhFAIaFby9sbNeh8+z+WO9ZzAz1Ez2kUXIvBecfDDpU3oz2e+WwNkb+Qmuv3TdI0wAp8If47OUvR8FfKckA0LSNA3rwXDFNHPfvi6WlXA0J6jPrkrOlw+t7Vq3aDpgaXPWS8EyQld2UwbN2GYG+dAiIw+dCR92jn3PbehxgHl46m9fwihosSHPfrDZMlumqA98tt+19GlHVrzOx8a/bSZVT5kxIYwGs2w0kSjR57zd6aeWUtxYgGEXAU9Q/hhxmy2UNtnBNuPqryBn0G1Ei3pC5Wg==',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.SelloSAT}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }]
@@ -504,7 +598,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: '21 Jul. 2022 - 12:50:50',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.FechaTimbrado}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }],
@@ -514,7 +608,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: 'VwGGm5IWxdBM1W68cnUdE2t7AF32+GbrgBAMOKLdroOTbMF08PLL8FG9FCL09mywdjjMHiXk6uAlyk/EtOgbYNDCHpcjRWDtgKSHBvMQ+4wcxu6rNi2RfATa1rbbPhNa0zeFhphTjaZi8bWbEOJene0yuXK87EQwGMZylTXfSe71dEoio9kbABM7PBPkznvmUn276YQ4yQEFo2bqpSn2KbzBkqFxQZuKHiSueG4ml3vNIe960WRTyR0BtuUyVassyioGmJqOa9EXB9Uyv/8MPsFPNOFiIYZ6x4D/uq0fdleTBZ331nvp0vdzSlgQKyZVGjxkrDVS3symnU+K9vfPDA==',
+                                            text: `${this.data.Complemento.TimbreFiscalDigital.SelloCFD}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }]

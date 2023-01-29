@@ -3,6 +3,8 @@ export declare class CfdiPdf {
     private data;
     constructor(xml: string);
     private getData;
+    private getDataComplement;
+    private getDataConcept;
     private emisor;
     private folio;
     private receptor;

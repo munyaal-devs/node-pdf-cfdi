@@ -6,3 +6,12 @@ export const currency = (value: number = 0, currency: string = 'MXN', locales: s
 
     return formatter.format(value)
 }
+
+
+export const getDataElement = (value: string, customSwitch: {condition: string, fn: Function}[]) => {
+    for (const { condition, fn } of customSwitch) {
+        if (value === condition) {
+            return fn();
+        }
+    }
+}
