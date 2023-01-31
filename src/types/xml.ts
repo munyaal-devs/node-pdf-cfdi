@@ -20,7 +20,7 @@ export type ComprobanteJson = {
     Emisor: AttributesComprobanteEmisorElement;
     Receptor: AttributesComprobanteReceptorElement;
     Conceptos: ComprobanteConcepto[];
-    Impuestos?: AttributesComprobanteImpuestosElement;
+    Impuestos?: any;
     Complemento: ComprobanteComplemento;
     Version: string;
     Serie?: string;

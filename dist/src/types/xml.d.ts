@@ -1,12 +1,12 @@
 import { ConceptoComplementoIeduElement } from "../complements";
-import { AttributesComprobanteEmisorElement, AttributesComprobanteImpuestosElement, AttributesComprobanteReceptorElement, AttributesComprobanteInformacionGlobalElement, AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement, AttributesComprobanteConceptoImpuestosRetencionesRetencionElement, AttributesComprobanteCfdiRelacionadosConCfdiRelacionadoElement } from "./index";
+import { AttributesComprobanteEmisorElement, AttributesComprobanteReceptorElement, AttributesComprobanteInformacionGlobalElement, AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement, AttributesComprobanteConceptoImpuestosRetencionesRetencionElement, AttributesComprobanteCfdiRelacionadosConCfdiRelacionadoElement } from "./index";
 export type ComprobanteJson = {
     InformacionGlobal?: AttributesComprobanteInformacionGlobalElement;
     CfdiRelacionados: ComprobanteCfdiRelacionados[];
     Emisor: AttributesComprobanteEmisorElement;
     Receptor: AttributesComprobanteReceptorElement;
     Conceptos: ComprobanteConcepto[];
-    Impuestos?: AttributesComprobanteImpuestosElement;
+    Impuestos?: any;
     Complemento: ComprobanteComplemento;
     Version: string;
     Serie?: string;
