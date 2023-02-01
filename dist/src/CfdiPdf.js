@@ -18,6 +18,7 @@ pdfmake_1.default.vfs = fontBase64_1.fontBase64;
 class CfdiPdf {
     _definition;
     data;
+    url = 'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx';
     constructor(xml
     // pedir cadena original del timbre
     ) {
@@ -69,6 +70,11 @@ class CfdiPdf {
                     }
                 }
             }
+            let url = `?id=${this.data.Complemento.TimbreFiscalDigital.UUID}&re=${this.data.Emisor.Rfc}&rr=${this.data.Receptor.Rfc}`;
+            const totalSplit = this.data.Total.split('.');
+            url = `${url}&tt=${totalSplit[0].padStart(18, '0')}.${totalSplit[1] ? totalSplit[1].padEnd(6, '0') : '0'.padEnd(6, '0')}`;
+            url = `${url}&fe=${this.data.Complemento.TimbreFiscalDigital.SelloCFD.substring(this.data.Complemento.TimbreFiscalDigital.SelloCFD.length - 8)}`;
+            this.url += url;
         }
     }
     getDataComplement(complement) {
@@ -545,10 +551,7 @@ class CfdiPdf {
                 '\n',
                 {
                     columns: [
-                        {
-                            width: '20%',
-                            text: ''
-                        },
+                        { qr: `${this.url}`, fit: 130 },
                         {
                             width: '40%',
                             layout: pdfmake_config_1.pdfmakeTableZebraLayout,
