@@ -35,15 +35,15 @@ export class CfdiPdf {
     private getData(xml: string) {
         const convert = xml2js(xml) as Element;
         if (convert.elements && convert.elements?.length > 0) {
-            this.data = { ...convert.elements[0].attributes }
+            this.data = {...convert.elements[0].attributes}
             if (convert.elements[0].elements) {
                 for (let index = 0; index < convert.elements[0].elements.length; index++) {
                     switch (convert.elements[0].elements[index].name) {
                         case "cfdi:Emisor":
-                            this.data.Emisor = { ...convert.elements[0].elements[index].attributes };
+                            this.data.Emisor = {...convert.elements[0].elements[index].attributes};
                             break;
                         case "cfdi:Receptor":
-                            this.data.Receptor = { ...convert.elements[0].elements[index].attributes };
+                            this.data.Receptor = {...convert.elements[0].elements[index].attributes};
                             break;
                         case "cfdi:Conceptos":
                             this.data = Object.assign(this.data, {
@@ -52,7 +52,7 @@ export class CfdiPdf {
                             this.getDataConcept(convert.elements[0].elements[index].elements || [])
                             break;
                         case "cfdi:Impuestos":
-                            this.data.Impuestos = { ...convert.elements[0].elements[index].attributes };
+                            this.data.Impuestos = {...convert.elements[0].elements[index].attributes};
                             const elementCtp = convert.elements[0].elements[index].elements || [];
                             if (elementCtp.length > 0) {
                                 for (let j = 0; j < elementCtp.length; j++) {
@@ -92,7 +92,7 @@ export class CfdiPdf {
                 case "tfd:TimbreFiscalDigital":
                     this.data = Object.assign(this.data, {
                         Complemento: {
-                            TimbreFiscalDigital: { ...complement[index].attributes }
+                            TimbreFiscalDigital: {...complement[index].attributes}
                         },
                     });
                     break;
@@ -105,12 +105,12 @@ export class CfdiPdf {
     private getDataConcept(ctp: Element[]) {
         for (let i = 0; i < ctp.length; i++) {
             if (ctp[i].name = "cfdi:Concepto") {
-                let objctp = { ...ctp[i].attributes };
+                let objctp = {...ctp[i].attributes};
                 const elementCtpI = ctp[i].elements || [];
                 if (elementCtpI.length > 0) {
                     for (let j = 0; j < elementCtpI.length; j++) {
-                        let ComplementoConcepto = { iedu: {}};
-                        let Impuestos: {Traslados: any[], Retenciones: any[]} = { Retenciones: [], Traslados: []};
+                        let ComplementoConcepto = {iedu: {}};
+                        let Impuestos: { Traslados: any[], Retenciones: any[] } = {Retenciones: [], Traslados: []};
                         const elementCtpJ = elementCtpI[j].elements || [];
                         if (elementCtpJ.length > 0) {
                             switch (elementCtpI[j].name) {
@@ -118,7 +118,7 @@ export class CfdiPdf {
                                     for (let k = 0; k < elementCtpJ.length; k++) {
                                         switch (elementCtpJ[k].name) {
                                             case "iedu:instEducativas":
-                                                ComplementoConcepto.iedu = { ...elementCtpJ[k].attributes };
+                                                ComplementoConcepto.iedu = {...elementCtpJ[k].attributes};
                                                 break;
                                             default:
                                                 break;
@@ -156,18 +156,18 @@ export class CfdiPdf {
 
     private emisor(): Content {
         return [
-            { text: `${this.data.Emisor.Nombre}`, bold: true, fontSize: 10 },
+            {text: `${this.data.Emisor.Nombre}`, bold: true, fontSize: 10},
             '\n',
             'RFC: ',
-            { text: `${this.data.Emisor.Rfc}`, bold: true },
+            {text: `${this.data.Emisor.Rfc}`, bold: true},
             '\n\n',
-            { text: 'Régimen fiscal: ' },
+            {text: 'Régimen fiscal: '},
             {
                 text: `${this.data.Emisor.RegimenFiscal} - ${searchOption(this.data.Emisor.RegimenFiscal, CatalogEnum.RegimenFiscal)?.description}`,
                 bold: true,
             },
             '\n',
-            { text: 'Número de certificado: ' },
+            {text: 'Número de certificado: '},
             {
                 text: `${this.data.NoCertificado}`,
                 bold: true,
@@ -192,16 +192,16 @@ export class CfdiPdf {
                         text: [
                             'Serie',
                             '\n',
-                            { text: `${this.data.Serie}`, bold: true, }
+                            {text: `${this.data.Serie}`, bold: true,}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
                     },
                     {
                         text: [
-                            { text: 'Folio', style: 'tableCell' },
+                            {text: 'Folio', style: 'tableCell'},
                             '\n',
-                            { text: `${this.data.Folio}`, bold: true }
+                            {text: `${this.data.Folio}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -212,7 +212,7 @@ export class CfdiPdf {
                         text: [
                             'Lugar de emisión',
                             '\n',
-                            { text: `${this.data.LugarExpedicion}`, bold: true }
+                            {text: `${this.data.LugarExpedicion}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -222,7 +222,7 @@ export class CfdiPdf {
                         text: [
                             'Fecha y hora de emisión',
                             '\n',
-                            { text: `${this.data.Fecha}`, bold: true }
+                            {text: `${this.data.Fecha}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -255,7 +255,7 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'RFC: ',
-                            { text: `${this.data.Receptor.Rfc}`, bold: true }
+                            {text: `${this.data.Receptor.Rfc}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -266,7 +266,10 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'Régimen Fiscal: ',
-                            { text: `${this.data.Receptor.RegimenFiscalReceptor} - ${searchOption(this.data.Receptor.RegimenFiscalReceptor, CatalogEnum.RegimenFiscal)?.description}`, bold: true }
+                            {
+                                text: `${this.data.Receptor.RegimenFiscalReceptor} - ${searchOption(this.data.Receptor.RegimenFiscalReceptor, CatalogEnum.RegimenFiscal)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -277,7 +280,7 @@ export class CfdiPdf {
                         width: '*',
                         text: [
                             'Domicilio fiscal: ',
-                            { text: `${this.data.Receptor.DomicilioFiscalReceptor}`, bold: true }
+                            {text: `${this.data.Receptor.DomicilioFiscalReceptor}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -304,16 +307,19 @@ export class CfdiPdf {
                         text: [
                             'Uso del CFDI',
                             '\n',
-                            { text: `${this.data.Receptor.UsoCFDI} - ${searchOption(this.data.Receptor.UsoCFDI, CatalogEnum.UsoCFDI)?.description}`, bold: true, }
+                            {
+                                text: `${this.data.Receptor.UsoCFDI} - ${searchOption(this.data.Receptor.UsoCFDI, CatalogEnum.UsoCFDI)?.description}`,
+                                bold: true,
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
                     },
                     {
                         text: [
-                            { text: 'Exportación', style: 'tableCell' },
+                            {text: 'Exportación', style: 'tableCell'},
                             '\n',
-                            { text: `${this.data.Exportacion}`, bold: true }
+                            {text: `${this.data.Exportacion}`, bold: true}
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -324,7 +330,10 @@ export class CfdiPdf {
                         text: [
                             'Método de pago',
                             '\n',
-                            { text: `${this.data.MetodoPago} - ${searchOption(this.data.MetodoPago || "", CatalogEnum.MetodoPago)?.description}`, bold: true }
+                            {
+                                text: `${this.data.MetodoPago} - ${searchOption(this.data.MetodoPago || "", CatalogEnum.MetodoPago)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -334,7 +343,10 @@ export class CfdiPdf {
                         text: [
                             'Forma de pago',
                             '\n',
-                            { text: `${this.data.FormaPago} - ${searchOption(this.data.FormaPago || "", CatalogEnum.FormaPago)?.description}`, bold: true }
+                            {
+                                text: `${this.data.FormaPago} - ${searchOption(this.data.FormaPago || "", CatalogEnum.FormaPago)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -362,7 +374,7 @@ export class CfdiPdf {
             }])
         }
         if (value.ComplementoConcepto) {
-            if (Object.entries(value.ComplementoConcepto.iedu).length != 0 ) {
+            if (Object.entries(value.ComplementoConcepto.iedu).length != 0) {
                 table.push([
                     {
                         text: `Alumno: ${value.ComplementoConcepto.iedu.nombreAlumno} CURP: ${value.ComplementoConcepto.iedu.CURP} Nivel educativo: ${value.ComplementoConcepto.iedu.nivelEducativo} Clave: ${value.ComplementoConcepto.iedu.autRVOE} RFC: ${value.ComplementoConcepto.iedu.rfcPago}`,
@@ -459,9 +471,9 @@ export class CfdiPdf {
                         table: {
                             widths: ['*'],
                             body: [
-                                [{ text: 'Subtotal', alignment: 'right' }],
-                                [{ text: 'Descuento', alignment: 'right' }],
-                                [{ text: 'IVA Trasladado (16%)', alignment: 'right' }],
+                                [{text: 'Subtotal', alignment: 'right'}],
+                                [{text: 'Descuento', alignment: 'right'}],
+                                [{text: 'IVA Trasladado (16%)', alignment: 'right'}],
                             ]
                         }
                     },
@@ -471,9 +483,17 @@ export class CfdiPdf {
                         table: {
                             widths: ['*'],
                             body: [
-                                [{ text: currency(parseFloat(`${this.data.SubTotal}`)), alignment: 'right', bold: true }],
-                                [{ text: currency(parseFloat(`${this.data.Descuento}`)), alignment: 'right', bold: true }],
-                                [{ text: currency(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)), alignment: 'right', bold: true }],
+                                [{text: currency(parseFloat(`${this.data.SubTotal}`)), alignment: 'right', bold: true}],
+                                [{
+                                    text: currency(parseFloat(`${this.data.Descuento}`)),
+                                    alignment: 'right',
+                                    bold: true
+                                }],
+                                [{
+                                    text: currency(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)),
+                                    alignment: 'right',
+                                    bold: true
+                                }],
                             ]
                         }
                     },
@@ -488,8 +508,8 @@ export class CfdiPdf {
                             {
                                 fontSize: 10,
                                 text: [
-                                    { text: 'Total ' },
-                                    { text: currency(parseFloat(`${this.data.Total}`)), bold: true }
+                                    {text: 'Total '},
+                                    {text: currency(parseFloat(`${this.data.Total}`)), bold: true}
                                 ],
                                 alignment: 'right'
                             },
@@ -497,8 +517,8 @@ export class CfdiPdf {
                         [{
                             alignment: 'center',
                             text: [
-                                { text: 'IMPORTE CON LETRAS: ', bold: true },
-                                { text: `${getTotalText(this.data.Total)} ${this.data.Moneda}` },
+                                {text: 'IMPORTE CON LETRAS: ', bold: true},
+                                {text: `${getTotalText(this.data.Total)} ${this.data.Moneda}`},
                             ]
                         }],
                     ]
@@ -576,7 +596,7 @@ export class CfdiPdf {
                 '\n',
                 {
                     columns: [
-                        { qr: `${this.url}`, fit: 130 },
+                        {qr: `${this.url}`, fit: 130},
                         {
                             width: '40%',
                             layout: pdfmakeTableZebraLayout,
@@ -682,7 +702,7 @@ export class CfdiPdf {
             ],
             footer: (currentPage, pageCount) => {
                 return [
-                    { columns: this.footer(currentPage, pageCount) }
+                    {columns: this.footer(currentPage, pageCount)}
                 ]
             },
             styles: pdfmakeStyles,
@@ -690,11 +710,11 @@ export class CfdiPdf {
         }
     }
 
-    public createDocument() {
+    public createDocument(name: string, folderPath: string) {
         const doc = PdfMake.createPdf(this._definition, {}, fonts);
 
         doc.getBase64(base => {
-            writeFile(`${process.cwd()}/src/pdfs/${new Date().getTime()}.pdf`, base, 'base64', error => {
+            writeFile(`${folderPath}/${name}.pdf`, base, 'base64', error => {
                 if (error) {
                     throw error;
                 } else {

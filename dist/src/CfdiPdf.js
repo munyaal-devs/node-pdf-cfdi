@@ -254,7 +254,10 @@ class CfdiPdf {
                         width: '*',
                         text: [
                             'Régimen Fiscal: ',
-                            { text: `${this.data.Receptor.RegimenFiscalReceptor} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.RegimenFiscalReceptor, src_1.CatalogEnum.RegimenFiscal)?.description}`, bold: true }
+                            {
+                                text: `${this.data.Receptor.RegimenFiscalReceptor} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.RegimenFiscalReceptor, src_1.CatalogEnum.RegimenFiscal)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -291,7 +294,10 @@ class CfdiPdf {
                         text: [
                             'Uso del CFDI',
                             '\n',
-                            { text: `${this.data.Receptor.UsoCFDI} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.UsoCFDI, src_1.CatalogEnum.UsoCFDI)?.description}`, bold: true, }
+                            {
+                                text: `${this.data.Receptor.UsoCFDI} - ${(0, cfdi_catalogs_1.searchOption)(this.data.Receptor.UsoCFDI, src_1.CatalogEnum.UsoCFDI)?.description}`,
+                                bold: true,
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -312,7 +318,10 @@ class CfdiPdf {
                         text: [
                             'Método de pago',
                             '\n',
-                            { text: `${this.data.MetodoPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.MetodoPago || "", src_1.CatalogEnum.MetodoPago)?.description}`, bold: true }
+                            {
+                                text: `${this.data.MetodoPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.MetodoPago || "", src_1.CatalogEnum.MetodoPago)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -322,7 +331,10 @@ class CfdiPdf {
                         text: [
                             'Forma de pago',
                             '\n',
-                            { text: `${this.data.FormaPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.FormaPago || "", src_1.CatalogEnum.FormaPago)?.description}`, bold: true }
+                            {
+                                text: `${this.data.FormaPago} - ${(0, cfdi_catalogs_1.searchOption)(this.data.FormaPago || "", src_1.CatalogEnum.FormaPago)?.description}`,
+                                bold: true
+                            }
                         ],
                         style: 'tableCell',
                         alignment: 'left',
@@ -455,8 +467,16 @@ class CfdiPdf {
                             widths: ['*'],
                             body: [
                                 [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.SubTotal}`)), alignment: 'right', bold: true }],
-                                [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.Descuento}`)), alignment: 'right', bold: true }],
-                                [{ text: (0, helpers_1.currency)(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)), alignment: 'right', bold: true }],
+                                [{
+                                        text: (0, helpers_1.currency)(parseFloat(`${this.data.Descuento}`)),
+                                        alignment: 'right',
+                                        bold: true
+                                    }],
+                                [{
+                                        text: (0, helpers_1.currency)(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)),
+                                        alignment: 'right',
+                                        bold: true
+                                    }],
                             ]
                         }
                     },
@@ -670,10 +690,10 @@ class CfdiPdf {
             defaultStyle: pdfmake_config_1.pdfmakeDefaultStyle
         };
     }
-    createDocument() {
+    createDocument(name, folderPath) {
         const doc = pdfmake_1.default.createPdf(this._definition, {}, fontConfig_1.fonts);
         doc.getBase64(base => {
-            (0, fs_1.writeFile)(`${process.cwd()}/src/pdfs/${new Date().getTime()}.pdf`, base, 'base64', error => {
+            (0, fs_1.writeFile)(`${folderPath}/${name}.pdf`, base, 'base64', error => {
                 if (error) {
                     throw error;
                 }
