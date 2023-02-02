@@ -19,9 +19,9 @@ class CfdiPdf {
     _definition;
     data;
     url = 'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx';
-    constructor(xml
-    // pedir cadena original del timbre
-    ) {
+    cadenaOriginal = '';
+    constructor(xml, cadenaOriginal) {
+        this.cadenaOriginal = cadenaOriginal;
         this.getData(xml);
         this.buildDefinition();
     }
@@ -345,7 +345,7 @@ class CfdiPdf {
         ];
         if (parseFloat(this.data.Impuestos?.TotalImpuestosTrasladados || '0') != 0) {
             table.push([{
-                    text: `Impuesto: ${(0, cfdi_catalogs_1.searchOption)(this.data.Impuestos.Traslados[0].Impuesto, src_1.CatalogEnum.Impuesto)?.description} Tipo factor: ${this.data.Impuestos.Traslados[0].TipoFactor} Tasa o cuota: ${parseFloat(this.data.Impuestos.Traslados[0].TasaOCuota).toFixed(2)} Base: ${(0, helpers_1.currency)(parseFloat(`${this.data.Impuestos.Traslados[0].Base}`))} Importe: ${(0, helpers_1.currency)(parseFloat(`${this.data.Impuestos.Traslados[0].Importe}`))}`,
+                    text: `Impuesto: ${(0, cfdi_catalogs_1.searchOption)(value.Impuestos?.Traslados[0].Impuesto || '', src_1.CatalogEnum.Impuesto)?.description} Tipo factor: ${value.Impuestos?.Traslados[0].TipoFactor || ''} Tasa o cuota: ${parseFloat(value.Impuestos?.Traslados[0].TasaOCuota || '').toFixed(2)} Base: ${(0, helpers_1.currency)(parseFloat(`${value.Impuestos?.Traslados[0].Base || ''}`))} Importe: ${(0, helpers_1.currency)(parseFloat(`${value?.Impuestos?.Traslados[0].Importe || ''}`))}`,
                     fontSize: 6,
                     lineHeight: 1
                 }]);
@@ -477,7 +477,14 @@ class CfdiPdf {
                                 ],
                                 alignment: 'right'
                             },
-                        ]
+                        ],
+                        [{
+                                alignment: 'center',
+                                text: [
+                                    { text: 'IMPORTE CON LETRAS: ', bold: true },
+                                    { text: `${(0, helpers_1.getTotalText)(this.data.Total)} ${this.data.Moneda}` },
+                                ]
+                            }],
                     ]
                 }
             }
@@ -585,7 +592,7 @@ class CfdiPdf {
                                             lineHeight: 1.15
                                         }],
                                     [{
-                                            text: '||1.1|1cbec0ea-6a29-4628-a822-9a170e20cd4e|2022-07-21T12:50:50|SPR190613I52|VwGGm5IWxdBM1W68cnUdE2t7AF32+GbrgBAMOKLdroOTbMF08PLL8FG9FCL09mywdjjMHiXk6uAlyk/EtOgbYNDCHpcjRWDtgKSHBvMQ+4wcxu6rNi2RfATa1rbbPhNa0zeFhphTjaZi8bWbEOJene0yuXK87EQwGMZylTXfSe71dEoio9kbABM7PBPkznvmUn276YQ4yQEFo2bqpSn2KbzBkqFxQZuKHiSueG4ml3vNIe960WRTyR0BtuUyVassyioGmJqOa9EXB9Uyv/8MPsFPNOFiIYZ6x4D/uq0fdleTBZ331nvp0vdzSlgQKyZVGjxkrDVS3symnU+K9vfPDA==|30001000000400002495||',
+                                            text: `${this.cadenaOriginal}`,
                                             fontSize: 4,
                                             lineHeight: 1.15
                                         }]

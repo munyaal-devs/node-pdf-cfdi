@@ -2,7 +2,8 @@ export declare class CfdiPdf {
     private _definition;
     private data;
     private url;
-    constructor(xml: string);
+    private cadenaOriginal;
+    constructor(xml: string, cadenaOriginal: string);
     private getData;
     private getDataComplement;
     private getDataConcept;
