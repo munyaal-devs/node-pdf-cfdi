@@ -1,14 +1,18 @@
 {
   "name": "@munyaal/cfdi-pdf",
-  "version": "1.0.0-Beta.3",
+  "version": "1.0.0-Beta.4",
   "description": "",
-  "main": "test/index.js",
+  "files": [
+    "dist/**"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf ./dist && tsc --build",
     "pretest": "npm run build",
     "test": "node ./dist/test/index.js"
   },
-  "author": "",
+  "author": "Munyaal Apps",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.11.18",

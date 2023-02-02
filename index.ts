@@ -1,1 +1,1 @@
-export { CfdiPdf } from "./src/CfdiPdf";
+export * from "./src";
