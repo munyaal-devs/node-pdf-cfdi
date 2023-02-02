@@ -1,4 +1,3 @@
-const xml = `<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante Version="4.0" Serie="A" Folio="MYLF-246" Fecha="2023-01-30T08:20:52" Sello="YfnwnSyaE8QLFCYTI5CiXmDoQEk5tFMORsA/owQn2tquK7RIfGrpWZ3jk4oQxUCjSyS6mzhK/5mRE0GPfkGnbgW4T+EJ+/RbToAyiobmqrbwml/w1KrCfEkV/plFJsgUxUpT8ThgKJlKc16OLbYnEtXSsUGMyC+U8VRbZmlolb+DsBZHrUZav+aGU1aenFeKAQzlS+cXdnO9I+bBPSoLwc7woO0Y75s8Yjfcemegv+ah8EhXexP8LK2NGzBIVCOD0ohz8ZIdO9wFXY1oITRINWGTY5GhycCbL8SeEJ9vnoByXyTMUbeHfN3gsSr1kf/FqPDjTAKrtYxFGShRSXykdw==" FormaPago="01" NoCertificado="30001000000400002333" Certificado="MIIFjjCCA3agAwIBAgIUMzAwMDEwMDAwMDA0MDAwMDIzMzMwDQYJKoZIhvcNAQELBQAwggErMQ8wDQYDVQQDDAZBQyBVQVQxLjAsBgNVBAoMJVNFUlZJQ0lPIERFIEFETUlOSVNUUkFDSU9OIFRSSUJVVEFSSUExGjAYBgNVBAsMEVNBVC1JRVMgQXV0aG9yaXR5MSgwJgYJKoZIhvcNAQkBFhlvc2Nhci5tYXJ0aW5lekBzYXQuZ29iLm14MR0wGwYDVQQJDBQzcmEgY2VycmFkYSBkZSBjYWRpejEOMAwGA1UEEQwFMDYzNzAxCzAJBgNVBAYTAk1YMRkwFwYDVQQIDBBDSVVEQUQgREUgTUVYSUNPMREwDwYDVQQHDAhDT1lPQUNBTjERMA8GA1UELRMIMi41LjQuNDUxJTAjBgkqhkiG9w0BCQITFnJlc3BvbnNhYmxlOiBBQ0RNQS1TQVQwHhcNMTkwNTI5MTkzMTM1WhcNMjMwNTI5MTkzMTM1WjCBtTEeMBwGA1UEAxMVTUFSSUEgV0FURU1CRVIgVE9SUkVTMR4wHAYDVQQpExVNQVJJQSBXQVRFTUJFUiBUT1JSRVMxHjAcBgNVBAoTFU1BUklBIFdBVEVNQkVSIFRPUlJFUzEWMBQGA1UELRMNV0FUTTY0MDkxN0o0NTEbMBkGA1UEBRMSV0FUTTY0MDkxN01IR1RSUjAxMR4wHAYDVQQLExVNQVJJQSBXQVRFTUJFUiBUT1JSRVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCM+W4Xe1M2/zdxgIkMv6vC+w64tJkaT4uevI1vSI/XoDjhcRotJ4BZI0CAe1o9ZlvQyTA4d0wbTfgBVj8P3ivgNafkQ1GTLpsdE2imtXgmTStSKnvIDIFzY1tRa7Nf/13upQI70rQT+9tOmOXf5IyXjKUrlUs0ZEZUWN/hJKvEZsAknWTMzJcdg/eZdSBIVINAIFb5DIbzgdTuBHt0Iy+X3F5zFFDMuCwMilix20xWQZmv53ZS1DpxdAnAsKKReF2FEcYy8E9cP90uz3z7YHldFXGRiu6rNbarsjH9rK6AzSCxQxWcVEu3LR57S4+4tCVf3B4BX5ic37Yo4Bx+03FbAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBCwUAA4ICAQBS621C2Bi1BAAoW80DmRwaUGoOtJEahwI6D4KRl9DPT9yTT3L383/ZYlOsoeQ77wZSklxvuFHYJKEuTDS6WCd0SHqGqWMHZwj9v+qZ3C6hiia1z60kAgsu4RYMb5ZyMRsFtfD+EIvAQk2w4TD7ovYmnAwBUxDK56pff2CpfyKJBznr/qfnVwOX9U1JFBRl+rTTd2dB4Gc7E6tZv9J2Hvxg72MQJsWCkwNGEL5ryZtvSlbM6qD3i0t0E4GZVVoUUxigW6yVOETEW1yU/EGyJCBOWIRX2VDMKnhhxukPrjhhsdX/yz2aWQmGV7NgjBskQEGV7b76DMg39gR+pfqiBRamd2IpVQsLT6JEmKO9qXmEKx+6tEfPbODpOCFgcg1cvyDoQqPKuoFZ6qsP6oeNXuz6X4dluhyuBjuYFDPYydEi9Drb+t3iG98vg+rPE2C+SBU4drg1LqsqmSm3SeYbn93m3YWcIj5c+xNsStGKNw7Gw6ZBnvS/CWChCIP3kEtWWWJWhhPWKnHaa7lSCVzGGMdUGtT3MZme7oew1GdCr9VlrnVPK4eU2ePddrIGLq8uINEzhgGTnIa6f/wJGynP8dhVI6eYQRBlicLk+ugfeoASCD/abr8Pi3jtUVfqIfPm6BbItxR9QyeCF9n66EkKfqxx04gOGUi/9H9hfnCVnNw7aQ==" SubTotal="948.28" Descuento="43.10" Moneda="MXN" Total="1050.01" TipoDeComprobante="I" Exportacion="01" MetodoPago="PUE" LugarExpedicion="77725" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd"><cfdi:Emisor Rfc="WATM640917J45" Nombre="MARIA WATEMBER TORRES" RegimenFiscal="612" /><cfdi:Receptor Rfc="MODC980924HK1" Nombre="CALEB ISAAC MORA DIAZ" DomicilioFiscalReceptor="77725" RegimenFiscalReceptor="612" UsoCFDI="G03" /><cfdi:Conceptos><cfdi:Concepto ClaveProdServ="91111701" Cantidad="2.000000" ClaveUnidad="H87" Descripcion="PLayera md" ValorUnitario="431.034483" Importe="862.068966" Descuento="43.103448" ObjetoImp="02"><cfdi:Impuestos><cfdi:Traslados><cfdi:Traslado Base="818.965518" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="131.034483" /></cfdi:Traslados></cfdi:Impuestos></cfdi:Concepto><cfdi:Concepto ClaveProdServ="53102705" Cantidad="1.000000" ClaveUnidad="H87" Descripcion="TRAJE DE BAÑO 1 PZA PROMOCION" ValorUnitario="86.206897" Importe="86.206897" Descuento="0.000000" ObjetoImp="02"><cfdi:Impuestos><cfdi:Traslados><cfdi:Traslado Base="86.206897" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="13.793104" /></cfdi:Traslados></cfdi:Impuestos></cfdi:Concepto></cfdi:Conceptos><cfdi:Impuestos TotalImpuestosTrasladados="144.83"><cfdi:Traslados><cfdi:Traslado Base="905.17" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="144.83" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="b7e7486e-3f9d-46de-afba-ed6ca2959fc4" FechaTimbrado="2023-01-30T08:21:20" RfcProvCertif="SPR190613I52" SelloCFD="YfnwnSyaE8QLFCYTI5CiXmDoQEk5tFMORsA/owQn2tquK7RIfGrpWZ3jk4oQxUCjSyS6mzhK/5mRE0GPfkGnbgW4T+EJ+/RbToAyiobmqrbwml/w1KrCfEkV/plFJsgUxUpT8ThgKJlKc16OLbYnEtXSsUGMyC+U8VRbZmlolb+DsBZHrUZav+aGU1aenFeKAQzlS+cXdnO9I+bBPSoLwc7woO0Y75s8Yjfcemegv+ah8EhXexP8LK2NGzBIVCOD0ohz8ZIdO9wFXY1oITRINWGTY5GhycCbL8SeEJ9vnoByXyTMUbeHfN3gsSr1kf/FqPDjTAKrtYxFGShRSXykdw==" NoCertificadoSAT="30001000000400002495" SelloSAT="Qrrin0j8wcVuwI8Enhv6VoLs+OamHTVfZ+FwngeI5jvr2hUfyEpmttbGT8XENDZwIPPrl4YQnMsvBFPFYj9x9o22SLRiJyYdfq5yfzpYAUENivKSnqEuVgRM+vOptyh75TN/UUyygIVJpZ3dlWkFUUs0UuG6aSpwZt6sFyf0LKQZZcJBhTrnzam/R9v3s+jRyhVH5Q611T/jkgUjo7QyHo4TYsCDTOwML/0HNHy2I2ViYd2ZAbEf5nWzXiFGxXTvXd3PnAMrZf8DXPRcXcV28mTFjnJYSWeBFyxndRh2Cx4dE1kjh7JCUB1BgHtcUeQLCDxJrig2PZtzWDBaa77unA==" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" /></cfdi:Complemento></cfdi:Comprobante>`;
 import { Column, Content, Table, TableCell, TDocumentDefinitions } from "pdfmake/interfaces";
 import PdfMake from "pdfmake/build/pdfmake";
 import { fontBase64 } from "./fonts/OpenSans/fontBase64";
@@ -12,28 +11,15 @@ import {
     pdfmakeTableZebraLayout
 } from "./pdfmake.config";
 import { currency, getTotalText } from "./helpers";
-import {
-    AttributesComprobanteConceptoImpuestosRetencionesRetencionElement,
-    AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement,
-    AttributesComprobanteEmisorElement,
-    AttributesComprobanteImpuestosElement,
-    AttributesComprobanteReceptorElement,
-    ComplementoTimbreFiscal,
-    ComprobanteConcepto,
-    ComprobanteConceptoComplementoConcepto,
-    ComprobanteConceptoImpuestos,
-    ComprobanteJson
-} from "./types/index"
 import { Element, xml2js } from "xml-js";
 import { searchOption } from "@munyaal/cfdi-catalogs";
 import { CatalogEnum } from "@munyaal/cfdi-catalogs/dist/src";
-import { ConceptoComplementoIeduElement } from "./complements";
 
 PdfMake.vfs = fontBase64;
 
 export class CfdiPdf {
     private _definition!: TDocumentDefinitions;
-    private data!: ComprobanteJson;
+    private data!: any;
     private url: string = 'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx';
     private cadenaOriginal: string = '';
 
@@ -49,15 +35,15 @@ export class CfdiPdf {
     private getData(xml: string) {
         const convert = xml2js(xml) as Element;
         if (convert.elements && convert.elements?.length > 0) {
-            this.data = { ...convert.elements[0].attributes } as unknown as ComprobanteJson
+            this.data = { ...convert.elements[0].attributes }
             if (convert.elements[0].elements) {
                 for (let index = 0; index < convert.elements[0].elements.length; index++) {
                     switch (convert.elements[0].elements[index].name) {
                         case "cfdi:Emisor":
-                            this.data.Emisor = { ...convert.elements[0].elements[index].attributes } as unknown as AttributesComprobanteEmisorElement;
+                            this.data.Emisor = { ...convert.elements[0].elements[index].attributes };
                             break;
                         case "cfdi:Receptor":
-                            this.data.Receptor = { ...convert.elements[0].elements[index].attributes } as unknown as AttributesComprobanteReceptorElement;
+                            this.data.Receptor = { ...convert.elements[0].elements[index].attributes };
                             break;
                         case "cfdi:Conceptos":
                             this.data = Object.assign(this.data, {
@@ -66,16 +52,16 @@ export class CfdiPdf {
                             this.getDataConcept(convert.elements[0].elements[index].elements || [])
                             break;
                         case "cfdi:Impuestos":
-                            this.data.Impuestos = { ...convert.elements[0].elements[index].attributes } as unknown as AttributesComprobanteImpuestosElement;
+                            this.data.Impuestos = { ...convert.elements[0].elements[index].attributes };
                             const elementCtp = convert.elements[0].elements[index].elements || [];
                             if (elementCtp.length > 0) {
                                 for (let j = 0; j < elementCtp.length; j++) {
                                     switch (elementCtp[j].name) {
                                         case "cfdi:Traslados":
-                                            this.data.Impuestos.Traslados = [...elementCtp[j].elements?.map((e) => e.attributes as unknown as AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement) || []] as unknown as AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement[];
+                                            this.data.Impuestos.Traslados = [...elementCtp[j].elements?.map((e) => e.attributes) || []];
                                             break;
                                         case "cfdi:Retenciones":
-                                            this.data.Impuestos.Retenciones = [...elementCtp[j].elements?.map((e) => e.attributes as unknown as AttributesComprobanteConceptoImpuestosRetencionesRetencionElement) || []] as unknown as AttributesComprobanteConceptoImpuestosRetencionesRetencionElement[];
+                                            this.data.Impuestos.Retenciones = [...elementCtp[j].elements?.map((e) => e.attributes) || []];
                                             break;
                                         default:
                                             break;
@@ -106,7 +92,7 @@ export class CfdiPdf {
                 case "tfd:TimbreFiscalDigital":
                     this.data = Object.assign(this.data, {
                         Complemento: {
-                            TimbreFiscalDigital: { ...complement[index].attributes } as unknown as ComplementoTimbreFiscal
+                            TimbreFiscalDigital: { ...complement[index].attributes }
                         },
                     });
                     break;
@@ -119,12 +105,12 @@ export class CfdiPdf {
     private getDataConcept(ctp: Element[]) {
         for (let i = 0; i < ctp.length; i++) {
             if (ctp[i].name = "cfdi:Concepto") {
-                let objctp = { ...ctp[i].attributes } as unknown as ComprobanteConcepto;
+                let objctp = { ...ctp[i].attributes };
                 const elementCtpI = ctp[i].elements || [];
                 if (elementCtpI.length > 0) {
                     for (let j = 0; j < elementCtpI.length; j++) {
-                        let ComplementoConcepto = {} as ComprobanteConceptoComplementoConcepto
-                        let Impuestos = {} as ComprobanteConceptoImpuestos
+                        let ComplementoConcepto = { iedu: {}};
+                        let Impuestos: {Traslados: any[], Retenciones: any[]} = { Retenciones: [], Traslados: []};
                         const elementCtpJ = elementCtpI[j].elements || [];
                         if (elementCtpJ.length > 0) {
                             switch (elementCtpI[j].name) {
@@ -132,7 +118,7 @@ export class CfdiPdf {
                                     for (let k = 0; k < elementCtpJ.length; k++) {
                                         switch (elementCtpJ[k].name) {
                                             case "iedu:instEducativas":
-                                                ComplementoConcepto.iedu = { ...elementCtpJ[k].attributes } as unknown as ConceptoComplementoIeduElement;
+                                                ComplementoConcepto.iedu = { ...elementCtpJ[k].attributes };
                                                 break;
                                             default:
                                                 break;
@@ -143,10 +129,10 @@ export class CfdiPdf {
                                     for (let k = 0; k < elementCtpJ.length; k++) {
                                         switch (elementCtpJ[k].name) {
                                             case "cfdi:Traslados":
-                                                Impuestos.Traslados = [...elementCtpJ[k].elements?.map((e) => e.attributes as unknown as AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement) || []] as unknown as AttributesComprobanteConceptoImpuestosTrasladosTrasladoElement[];
+                                                Impuestos.Traslados = [...elementCtpJ[k].elements?.map((e) => e.attributes) || []];
                                                 break;
                                             case "cfdi:Retenciones":
-                                                Impuestos.Retenciones = [...elementCtpJ[k].elements?.map((e) => e.attributes as unknown as AttributesComprobanteConceptoImpuestosRetencionesRetencionElement) || []] as unknown as AttributesComprobanteConceptoImpuestosRetencionesRetencionElement[];
+                                                Impuestos.Retenciones = [...elementCtpJ[k].elements?.map((e) => e.attributes) || []];
                                                 break;
                                             default:
                                                 break;
@@ -357,7 +343,7 @@ export class CfdiPdf {
         }
     }
 
-    private concept(value: ComprobanteConcepto): Table {
+    private concept(value: any): Table {
         const table = [
             [{
                 text: `${value.Descripcion}`,
@@ -376,7 +362,7 @@ export class CfdiPdf {
             }])
         }
         if (value.ComplementoConcepto) {
-            if (value.ComplementoConcepto.iedu) {
+            if (Object.entries(value.ComplementoConcepto.iedu).length != 0 ) {
                 table.push([
                     {
                         text: `Alumno: ${value.ComplementoConcepto.iedu.nombreAlumno} CURP: ${value.ComplementoConcepto.iedu.CURP} Nivel educativo: ${value.ComplementoConcepto.iedu.nivelEducativo} Clave: ${value.ComplementoConcepto.iedu.autRVOE} RFC: ${value.ComplementoConcepto.iedu.rfcPago}`,
@@ -393,7 +379,7 @@ export class CfdiPdf {
     }
 
     private concepts(): Table {
-        const concepts: TableCell[][] = this.data.Conceptos.map(value => (
+        const concepts: TableCell[][] = this.data.Conceptos.map((value: any) => (
             [
                 {
                     layout: 'noBorders',
