@@ -1,1 +1,1 @@
-export declare const bootstrap: () => void;
+export { CfdiPdf } from './CfdiPdf';

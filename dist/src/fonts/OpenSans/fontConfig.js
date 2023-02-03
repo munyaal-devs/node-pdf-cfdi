@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fonts = void 0;
 exports.fonts = {
-    OpenSand: {
+    OpenSans: {
         normal: 'OpenSans-Regular.ttf',
         bold: 'OpenSans-Bold.ttf',
         italics: 'OpenSans-Italic.ttf',

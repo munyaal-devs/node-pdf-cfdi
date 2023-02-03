@@ -710,17 +710,22 @@ export class CfdiPdf {
         }
     }
 
-    public createDocument(name: string, folderPath: string) {
-        const doc = PdfMake.createPdf(this._definition, {}, fonts);
+    public async createDocument(name: string, folderPath: string) {
+        return new Promise((resolve, reject) => {
 
-        doc.getBase64(base => {
-            writeFile(`${folderPath}/${name}.pdf`, base, 'base64', error => {
-                if (error) {
-                    throw error;
-                } else {
-                    console.log('base64 saved!');
-                }
-            });
+            const doc = PdfMake.createPdf(this._definition, {}, fonts);
+
+            doc.getBase64(base => {
+                writeFile(`${folderPath}/${name}.pdf`, base, 'base64', error => {
+                    if (error) {
+                        console.error(error)
+                        reject(error)
+                    } else {
+                        resolve(`${folderPath}/${name}.pdf`)
+                    }
+                });
+            })
+
         })
     }
 }

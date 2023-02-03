@@ -35,7 +35,7 @@ exports.pdfmakeTableLayout = {
     defaultBorder: false,
 };
 exports.pdfmakeDefaultStyle = {
-    font: 'OpenSand',
+    font: 'OpenSans',
     columnGap: 5,
     fontSize: 7,
     lineHeight: 1.25,

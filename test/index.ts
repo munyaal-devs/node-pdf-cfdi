@@ -5,7 +5,7 @@ export const bootstrap = () => {
     const cadena = `||1.1|b24ad921-8e63-4b36-b7a0-073505ed8870|2023-02-01T11:35:24|SPR190613I52|NSQpQbFjlzqZ90wATbhnUl/P2wZ9EhdnegqZzLDMCD1dZ9hOutK/9jDHs8U7uAAidRDTbRwctLLyOw27vCK8ONhybnOp0aM4DxUAa6FsAi50sC5YhH6dedcc/6H86YR3EReMXbSEijBMVz2zlW8PoLZYfMRBA6DFvo/JR6tuMJQFBPYS96rixCMWX/uFJTxw9dqYVCGDJCIuWN5FeVj5SbH1n++GK56svRfQTu5Kk9hpqL9jHSqJSrEqa82Qwl7q1DKr8V4Xds3nyEnPcwehdrCP301LHXE2x2inAjTEHZK1CTozU6CGIaDUe2dndb7tnEl/04hBVfp/bGPhrGVFvw==|30001000000400002495||`;
     const pdf = new CfdiPdf(xml, cadena);
 
-    // pdf.createDocument();
+    pdf.createDocument(`${new Date().getTime()}`, `${process.cwd()}/src/pdfs/`);
 }
 
 bootstrap()

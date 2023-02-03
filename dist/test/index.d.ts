@@ -1,1 +1,1 @@
-export {};
+export declare const bootstrap: () => void;

@@ -1,7 +1,7 @@
 import { TFontDictionary } from "pdfmake/interfaces";
 
 export const fonts: TFontDictionary = {
-    OpenSand: {
+    OpenSans: {
         normal: 'OpenSans-Regular.ttf',
         bold: 'OpenSans-Bold.ttf',
         italics: 'OpenSans-Italic.ttf',

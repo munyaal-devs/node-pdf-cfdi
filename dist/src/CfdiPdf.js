@@ -698,7 +698,7 @@ class CfdiPdf {
                     throw error;
                 }
                 else {
-                    console.log('base64 saved!');
+                    // console.log('base64 saved!');
                 }
             });
         });
