@@ -14,6 +14,7 @@ const xml_js_1 = require("xml-js");
 const cfdi_catalogs_1 = require("@munyaal/cfdi-catalogs");
 const src_1 = require("@munyaal/cfdi-catalogs/dist/src");
 pdfmake_1.default.vfs = fontBase64_1.fontBase64;
+pdfmake_1.default.fonts = fontConfig_1.fonts;
 class CfdiPdf {
     _definition;
     data;
@@ -690,16 +691,19 @@ class CfdiPdf {
             defaultStyle: pdfmake_config_1.pdfmakeDefaultStyle
         };
     }
-    createDocument(name, folderPath) {
-        const doc = pdfmake_1.default.createPdf(this._definition, {}, fontConfig_1.fonts);
-        doc.getBase64(base => {
-            (0, fs_1.writeFile)(`${folderPath}/${name}.pdf`, base, 'base64', error => {
-                if (error) {
-                    throw error;
-                }
-                else {
-                    // console.log('base64 saved!');
-                }
+    async createDocument(name, folderPath) {
+        return new Promise((resolve, reject) => {
+            const doc = pdfmake_1.default.createPdf(this._definition, {}, fontConfig_1.fonts, fontBase64_1.fontBase64);
+            doc.getBase64(base => {
+                (0, fs_1.writeFile)(`${folderPath}/${name}.pdf`, base, 'base64', error => {
+                    if (error) {
+                        console.error(error);
+                        reject(error);
+                    }
+                    else {
+                        resolve(`${folderPath}/${name}.pdf`);
+                    }
+                });
             });
         });
     }

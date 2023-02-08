@@ -16,6 +16,7 @@ import { searchOption } from "@munyaal/cfdi-catalogs";
 import { CatalogEnum } from "@munyaal/cfdi-catalogs/dist/src";
 
 PdfMake.vfs = fontBase64;
+PdfMake.fonts = fonts;
 
 export class CfdiPdf {
     private _definition!: TDocumentDefinitions;
@@ -713,7 +714,7 @@ export class CfdiPdf {
     public async createDocument(name: string, folderPath: string) {
         return new Promise((resolve, reject) => {
 
-            const doc = PdfMake.createPdf(this._definition, {}, fonts);
+            const doc = PdfMake.createPdf(this._definition, {}, fonts, fontBase64);
 
             doc.getBase64(base => {
                 writeFile(`${folderPath}/${name}.pdf`, base, 'base64', error => {

@@ -16,5 +16,5 @@ export declare class CfdiPdf {
     private summary;
     private footer;
     private buildDefinition;
-    createDocument(name: string, folderPath: string): void;
+    createDocument(name: string, folderPath: string): Promise<unknown>;
 }
