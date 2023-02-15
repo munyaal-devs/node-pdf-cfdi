@@ -4,9 +4,6 @@ export declare class CfdiPdf {
     private url;
     private cadenaOriginal;
     constructor(xml: string, cadenaOriginal: string);
-    private getData;
-    private getDataComplement;
-    private getDataConcept;
     private emisor;
     private folio;
     private receptor;

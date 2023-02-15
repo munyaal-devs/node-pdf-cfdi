@@ -10,7 +10,6 @@ const fontConfig_1 = require("./fonts/OpenSans/fontConfig");
 const fs_1 = require("fs");
 const pdfmake_config_1 = require("./pdfmake.config");
 const helpers_1 = require("./helpers");
-const xml_js_1 = require("xml-js");
 const cfdi_catalogs_1 = require("@munyaal/cfdi-catalogs");
 const src_1 = require("@munyaal/cfdi-catalogs/dist/src");
 pdfmake_1.default.vfs = fontBase64_1.fontBase64;
@@ -22,126 +21,9 @@ class CfdiPdf {
     cadenaOriginal = '';
     constructor(xml, cadenaOriginal) {
         this.cadenaOriginal = cadenaOriginal;
-        this.getData(xml);
+        this.data = (0, helpers_1.getData)(xml);
+        this.url += (0, helpers_1.getUrlQr)(this.data);
         this.buildDefinition();
-    }
-    getData(xml) {
-        const convert = (0, xml_js_1.xml2js)(xml);
-        if (convert.elements && convert.elements?.length > 0) {
-            this.data = { ...convert.elements[0].attributes };
-            if (convert.elements[0].elements) {
-                for (let index = 0; index < convert.elements[0].elements.length; index++) {
-                    switch (convert.elements[0].elements[index].name) {
-                        case "cfdi:Emisor":
-                            this.data.Emisor = { ...convert.elements[0].elements[index].attributes };
-                            break;
-                        case "cfdi:Receptor":
-                            this.data.Receptor = { ...convert.elements[0].elements[index].attributes };
-                            break;
-                        case "cfdi:Conceptos":
-                            this.data = Object.assign(this.data, {
-                                Conceptos: [],
-                            });
-                            this.getDataConcept(convert.elements[0].elements[index].elements || []);
-                            break;
-                        case "cfdi:Impuestos":
-                            this.data.Impuestos = { ...convert.elements[0].elements[index].attributes };
-                            const elementCtp = convert.elements[0].elements[index].elements || [];
-                            if (elementCtp.length > 0) {
-                                for (let j = 0; j < elementCtp.length; j++) {
-                                    switch (elementCtp[j].name) {
-                                        case "cfdi:Traslados":
-                                            this.data.Impuestos.Traslados = [...elementCtp[j].elements?.map((e) => e.attributes) || []];
-                                            break;
-                                        case "cfdi:Retenciones":
-                                            this.data.Impuestos.Retenciones = [...elementCtp[j].elements?.map((e) => e.attributes) || []];
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            }
-                            break;
-                        case "cfdi:Complemento":
-                            this.getDataComplement(convert.elements[0].elements[index].elements || []);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            let url = `?id=${this.data.Complemento.TimbreFiscalDigital.UUID}&re=${this.data.Emisor.Rfc}&rr=${this.data.Receptor.Rfc}`;
-            const totalSplit = this.data.Total.split('.');
-            url = `${url}&tt=${totalSplit[0].padStart(18, '0')}.${totalSplit[1] ? totalSplit[1].padEnd(6, '0') : '0'.padEnd(6, '0')}`;
-            url = `${url}&fe=${this.data.Complemento.TimbreFiscalDigital.SelloCFD.substring(this.data.Complemento.TimbreFiscalDigital.SelloCFD.length - 8)}`;
-            this.url += url;
-        }
-    }
-    getDataComplement(complement) {
-        for (let index = 0; index < complement.length; index++) {
-            switch (complement[index].name) {
-                case "tfd:TimbreFiscalDigital":
-                    this.data = Object.assign(this.data, {
-                        Complemento: {
-                            TimbreFiscalDigital: { ...complement[index].attributes }
-                        },
-                    });
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    getDataConcept(ctp) {
-        for (let i = 0; i < ctp.length; i++) {
-            if (ctp[i].name = "cfdi:Concepto") {
-                let objctp = { ...ctp[i].attributes };
-                const elementCtpI = ctp[i].elements || [];
-                if (elementCtpI.length > 0) {
-                    for (let j = 0; j < elementCtpI.length; j++) {
-                        let ComplementoConcepto = { iedu: {} };
-                        let Impuestos = { Retenciones: [], Traslados: [] };
-                        const elementCtpJ = elementCtpI[j].elements || [];
-                        if (elementCtpJ.length > 0) {
-                            switch (elementCtpI[j].name) {
-                                case "cfdi:ComplementoConcepto":
-                                    for (let k = 0; k < elementCtpJ.length; k++) {
-                                        switch (elementCtpJ[k].name) {
-                                            case "iedu:instEducativas":
-                                                ComplementoConcepto.iedu = { ...elementCtpJ[k].attributes };
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-                                    break;
-                                case "cfdi:Impuestos":
-                                    for (let k = 0; k < elementCtpJ.length; k++) {
-                                        switch (elementCtpJ[k].name) {
-                                            case "cfdi:Traslados":
-                                                Impuestos.Traslados = [...elementCtpJ[k].elements?.map((e) => e.attributes) || []];
-                                                break;
-                                            case "cfdi:Retenciones":
-                                                Impuestos.Retenciones = [...elementCtpJ[k].elements?.map((e) => e.attributes) || []];
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                            objctp = Object.assign(objctp, {
-                                ComplementoConcepto,
-                                Impuestos
-                            });
-                        }
-                    }
-                }
-                this.data.Conceptos.push(objctp);
-            }
-        }
     }
     emisor() {
         return [
