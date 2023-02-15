@@ -10,6 +10,8 @@ export declare class CfdiPdf {
     private payment;
     private concept;
     private concepts;
+    private relationship;
+    private relationships;
     private summary;
     private footer;
     private buildDefinition;

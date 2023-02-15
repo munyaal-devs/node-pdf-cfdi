@@ -4,13 +4,15 @@ exports.getUrlQr = exports.getData = exports.getDataConcept = exports.getDataCom
 const xml_js_1 = require("xml-js");
 const getDataComplement_1 = require("./getDataComplement");
 const getDataConcept_1 = require("./getDataConcept");
+const getDataRelacionados_1 = require("./getDataRelacionados");
 var getDataComplement_2 = require("./getDataComplement");
 Object.defineProperty(exports, "getDataComplement", { enumerable: true, get: function () { return getDataComplement_2.getDataComplement; } });
 var getDataConcept_2 = require("./getDataConcept");
 Object.defineProperty(exports, "getDataConcept", { enumerable: true, get: function () { return getDataConcept_2.getDataConcept; } });
 const getData = (xml) => {
-    let data = {};
     const convert = (0, xml_js_1.xml2js)(xml);
+    let data = {};
+    const dataCfdiRelacionados = [];
     if (convert.elements && convert.elements?.length > 0) {
         data = { ...convert.elements[0].attributes };
         if (convert.elements[0].elements) {
@@ -32,25 +34,19 @@ const getData = (xml) => {
                         });
                         break;
                     case "cfdi:Impuestos":
-                        data = Object.assign(data, {
-                            Impuestos: { ...convert.elements[0].elements[index].attributes }
-                        });
                         const elementCtp = convert.elements[0].elements[index].elements || [];
+                        let Impuestos = {};
                         if (elementCtp.length > 0) {
                             for (let j = 0; j < elementCtp.length; j++) {
                                 switch (elementCtp[j].name) {
                                     case "cfdi:Traslados":
-                                        data = Object.assign(data, {
-                                            Impuestos: {
-                                                Traslados: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
-                                            }
+                                        Impuestos = Object.assign(Impuestos, {
+                                            Traslados: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
                                         });
                                         break;
                                     case "cfdi:Retenciones":
-                                        data = Object.assign(data, {
-                                            Impuestos: {
-                                                Retenciones: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
-                                            }
+                                        Impuestos = Object.assign(Impuestos, {
+                                            Retenciones: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
                                         });
                                         break;
                                     default:
@@ -58,16 +54,25 @@ const getData = (xml) => {
                                 }
                             }
                         }
+                        data = Object.assign(data, {
+                            Impuestos: { ...convert.elements[0].elements[index].attributes, ...Impuestos }
+                        });
                         break;
                     case "cfdi:Complemento":
                         data = Object.assign(data, {
                             Complemento: (0, getDataComplement_1.getDataComplement)(convert.elements[0].elements[index].elements || [])
                         });
                         break;
+                    case "cfdi:CfdiRelacionados":
+                        dataCfdiRelacionados.push(convert.elements[0].elements[index]);
+                        break;
                     default:
                         break;
                 }
             }
+            data = Object.assign(data, {
+                CfdiRelacionados: (0, getDataRelacionados_1.getDataRelacionados)(dataCfdiRelacionados || []),
+            });
         }
     }
     return data;
