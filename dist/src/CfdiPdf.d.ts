@@ -3,7 +3,9 @@ export declare class CfdiPdf {
     private data;
     private url;
     private cadenaOriginal;
-    constructor(xml: string, cadenaOriginal: string);
+    private logo;
+    constructor(xml: string, cadenaOriginal: string, pathLogo?: string);
+    private getLogo;
     private emisor;
     private folio;
     private receptor;
