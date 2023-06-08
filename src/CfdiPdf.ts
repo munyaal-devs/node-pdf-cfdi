@@ -632,7 +632,7 @@ export class CfdiPdf {
         this.summary(),
         "\n",
         {
-          columns: [
+          columns: !this.data.CfdiRelacionados.length ? [] : [
             {
               width: "100%",
               layout: pdfmakeTableLayout,

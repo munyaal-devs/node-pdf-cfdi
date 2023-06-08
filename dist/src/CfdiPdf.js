@@ -558,7 +558,7 @@ class CfdiPdf {
                 this.summary(),
                 "\n",
                 {
-                    columns: [
+                    columns: !this.data.CfdiRelacionados.length ? [] : [
                         {
                             width: "100%",
                             layout: pdfmake_config_1.pdfmakeTableLayout,
