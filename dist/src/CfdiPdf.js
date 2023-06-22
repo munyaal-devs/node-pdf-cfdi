@@ -70,7 +70,7 @@ class CfdiPdf {
             body: [
                 [
                     {
-                        text: "CFDI de Ingreso",
+                        text: `CFDI de ${(0, cfdi_catalogs_1.searchOption)(this.data.TipoDeComprobante, src_1.CatalogEnum.TipoDeComprobante)?.description}`,
                         alignment: "center",
                         style: "tableCell",
                         marginTop: 0.15,
@@ -248,6 +248,19 @@ class CfdiPdf {
                         alignment: "left",
                     },
                 ],
+                this.data.CondicionesDePago && this.data.CondicionesDePago != "" ? [
+                    {
+                        width: "*",
+                        text: [
+                            { text: "Condiciones de pago", style: "tableCell" },
+                            "\n",
+                            { text: `${this.data.CondicionesDePago}`, bold: true },
+                        ],
+                        style: "tableCell",
+                        alignment: "left",
+                    },
+                    {}
+                ] : [{}, {}],
             ],
         };
     }
