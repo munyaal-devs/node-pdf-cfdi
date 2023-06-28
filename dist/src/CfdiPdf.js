@@ -458,7 +458,9 @@ class CfdiPdf {
                                 ],
                                 [
                                     {
-                                        text: (0, helpers_1.currency)(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)),
+                                        text: (0, helpers_1.currency)(isNaN(parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`))
+                                            ? 0
+                                            : parseFloat(`${this.data.Impuestos?.TotalImpuestosTrasladados}`)),
                                         alignment: "right",
                                         bold: true,
                                     },

@@ -528,7 +528,11 @@ export class CfdiPdf {
                 [
                   {
                     text: currency(
-                      parseFloat(
+                      isNaN(parseFloat(
+                        `${this.data.Impuestos?.TotalImpuestosTrasladados}`
+                      ))
+                      ? 0
+                      : parseFloat(
                         `${this.data.Impuestos?.TotalImpuestosTrasladados}`
                       )
                     ),
