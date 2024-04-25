@@ -79,10 +79,14 @@ export const getData = (xml: string) => {
 }
 
 export const getUrlQr = (data: any) => {
-    let url = `?id=${data.Complemento.TimbreFiscalDigital.UUID}&re=${data.Emisor.Rfc}&rr=${data.Receptor.Rfc}`
+    const folio = `${data.Complemento.TimbreFiscalDigital.UUID}`;
+    const emisor = `${data.Emisor.Rfc}`;
+    const receptor = `${data.Receptor.Rfc}`
+    
     const totalSplit = data.Total.split('.');
-    url = `${url}&tt=${totalSplit[0].padStart(18, '0')}.${totalSplit[1] ? totalSplit[1].padEnd(6, '0') : '0'.padEnd(6, '0')}`;
-    url = `${url}&fe=${data.Complemento.TimbreFiscalDigital.SelloCFD.substring(data.Complemento.TimbreFiscalDigital.SelloCFD.length - 8)}`;
-    url += url;
-    return url;
+
+    const total = `${totalSplit[0].padStart(18, '0')}.${totalSplit[1] ? totalSplit[1].padEnd(6, '0') : '0'.padEnd(6, '0')}`
+    const timbre = `${data.Complemento.TimbreFiscalDigital.SelloCFD.substring(data.Complemento.TimbreFiscalDigital.SelloCFD.length - 8)}`;
+
+    return `?id=${folio}&re=${emisor}&rr=${receptor}&tt=${total}&fe=${timbre}`
 }
