@@ -1,6 +1,6 @@
 {
   "name": "@munyaal/cfdi-pdf",
-  "version": "1.0.0-Beta.6",
+  "version": "1.0.4",
   "description": "",
   "files": [
     "dist/**"
