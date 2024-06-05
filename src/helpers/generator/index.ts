@@ -2,17 +2,17 @@ import { Element, xml2js } from "xml-js";
 import { getDataComplement } from "./getDataComplement";
 import { getDataConcept } from "./getDataConcept";
 import { getDataRelacionados } from "./getDataRelacionados";
+import { ComprobanteType } from "../../types";
 
 export { getDataComplement } from "./getDataComplement";
 export { getDataConcept } from "./getDataConcept";
 
-
 export const getData = (xml: string) => {
     const convert = xml2js(xml) as Element;
-    let data = {} as any;
+    let data = {} as ComprobanteType;
     const dataCfdiRelacionados = []
     if (convert.elements && convert.elements?.length > 0) {
-        data = { ...convert.elements[0].attributes }
+        data = { ...convert.elements[0].attributes } as unknown as ComprobanteType;
         if (convert.elements[0].elements) {
             for (let index = 0; index < convert.elements[0].elements.length; index++) {
                 switch (convert.elements[0].elements[index].name) {

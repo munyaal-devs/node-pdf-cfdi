@@ -29,7 +29,7 @@ const getTotalText = (value) => {
     const values = value.split('.');
     const n1 = (0, utils_1.convertToText)(values[0]);
     let n2 = `00/100`;
-    if (values[1].length > 0) {
+    if (values[1] && values[1].length > 0) {
         if (`${parseInt(values[1])}`.length === 1) {
             n2 = `${values[1]}/100`;
         }
@@ -40,3 +40,4 @@ const getTotalText = (value) => {
     return `${n1} ${n2}`.toUpperCase();
 };
 exports.getTotalText = getTotalText;
+//# sourceMappingURL=index.js.map
