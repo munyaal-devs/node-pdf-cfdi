@@ -3,7 +3,7 @@ import { Element } from "xml-js";
 export const getDataConcept = (ctp: Element[]) => {
     const Conceptos = [];
     for (let i = 0; i < ctp.length; i++) {
-        if (ctp[i].name = "cfdi:Concepto") {
+        if (ctp[i].name == "cfdi:Concepto") {
             let objctp = {...ctp[i].attributes};
             const elementCtpI = ctp[i].elements || [];
             if (elementCtpI.length > 0) {

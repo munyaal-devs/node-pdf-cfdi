@@ -5,9 +5,6 @@ export declare class CfdiPdf {
     private cadenaOriginal;
     private logo;
     constructor(xml: string, cadenaOriginal: string, pathLogo?: string);
-    private getLogo;
-    private emisor;
-    private folio;
     private receptor;
     private payment;
     private concept;

@@ -76,7 +76,6 @@ const getData = (xml) => {
             });
         }
     }
-    console.log(JSON.stringify(data, null, 3));
     return data;
 };
 exports.getData = getData;

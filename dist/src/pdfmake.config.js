@@ -41,3 +41,4 @@ exports.pdfmakeDefaultStyle = {
     lineHeight: 1.25,
     color: '#595959',
 };
+//# sourceMappingURL=pdfmake.config.js.map

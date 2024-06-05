@@ -19,13 +19,15 @@ import {
 import { currency, getTotalText, getData, getUrlQr } from "./helpers";
 import { searchOption } from "@munyaal/cfdi-catalogs";
 import { CatalogEnum } from "@munyaal/cfdi-catalogs/dist/src";
+import { emisor, folio, getLogo } from "./pdfmakeData";
+import { ComprobanteType } from "./types";
 
 PdfMake.vfs = fontBase64;
 PdfMake.fonts = fonts;
 
 export class CfdiPdf {
   private _definition!: TDocumentDefinitions;
-  private data!: any;
+  private data!: ComprobanteType;
   private url: string =
     "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx";
   private cadenaOriginal: string = "";
@@ -36,110 +38,9 @@ export class CfdiPdf {
     this.data = getData(xml);
     this.url += getUrlQr(this.data);
     if (pathLogo != undefined && pathLogo != "") {
-      this.logo = this.getLogo(pathLogo);
+      this.logo = getLogo(pathLogo);
     }
     this.buildDefinition();
-  }
-
-  private getLogo(path: string) {
-    try {
-      const logo = readFileSync(`${path}`);
-      return `data:image/jpg;base64, ${logo.toString("base64")}`;
-    } catch (e) {
-      console.error({
-        status: "ERROR: 001",
-        process: "No se pudo obtener el archivo",
-        solutions: [`Valida la existencia del archivo ${path}`],
-        error: e,
-      });
-      return undefined;
-    }
-  }
-
-  private emisor(): Content {
-    return [
-      { text: `${this.data.Emisor.Nombre}`, bold: true, fontSize: 10 },
-      "\n",
-      "RFC: ",
-      { text: `${this.data.Emisor.Rfc}`, bold: true },
-      "\n\n",
-      { text: "Régimen fiscal: " },
-      {
-        text: `${this.data.Emisor.RegimenFiscal} - ${
-          searchOption(
-            this.data.Emisor.RegimenFiscal,
-            CatalogEnum.RegimenFiscal
-          )?.description
-        }`,
-        bold: true,
-      },
-      "\n",
-      { text: "Número de certificado: " },
-      {
-        text: `${this.data.NoCertificado}`,
-        bold: true,
-      },
-    ];
-  }
-
-  private folio(): Table {
-    return {
-      widths: ["*", "*"],
-      body: [
-        [
-          {
-            text: `CFDI de ${searchOption(
-              this.data.TipoDeComprobante,
-              CatalogEnum.TipoDeComprobante
-            )?.description}`,
-            alignment: "center",
-            style: "tableCell",
-            marginTop: 0.15,
-            colSpan: 2,
-            bold: true,
-          },
-          {},
-        ],
-        [
-          {
-            text: ["Serie", "\n", { text: `${this.data.Serie}`, bold: true }],
-            style: "tableCell",
-            alignment: "left",
-          },
-          {
-            text: [
-              { text: "Folio", style: "tableCell" },
-              "\n",
-              { text: `${this.data.Folio}`, bold: true },
-            ],
-            style: "tableCell",
-            alignment: "left",
-          },
-        ],
-        [
-          {
-            width: "*",
-            text: [
-              "Lugar de emisión",
-              "\n",
-              { text: `${this.data.LugarExpedicion}`, bold: true },
-            ],
-            style: "tableCell",
-            alignment: "left",
-          },
-          {
-            width: "*",
-            text: [
-              "Fecha y hora de emisión",
-              "\n",
-              { text: `${this.data.Fecha}`, bold: true },
-            ],
-            style: "tableCell",
-            alignment: "left",
-          },
-        ],
-      ],
-    };
   }
 
   private receptor(): Table {
@@ -243,14 +144,15 @@ export class CfdiPdf {
             text: [
               { text: "Exportación", style: "tableCell" },
               "\n",
-              { text: `${this.data.Exportacion}`, bold: true },
+              { text: `${this.data.Exportacion} - ${searchOption(this.data.Exportacion, CatalogEnum.Exportacion)
+                ?.description}`, bold: true },
             ],
             style: "tableCell",
             alignment: "left",
           },
         ],
         [
-          {
+          this.data.MetodoPago ? {
             width: "*",
             text: [
               "Método de pago",
@@ -267,8 +169,8 @@ export class CfdiPdf {
             ],
             style: "tableCell",
             alignment: "left",
-          },
-          {
+          } : { },
+          this.data.FormaPago ? {
             width: "*",
             text: [
               "Forma de pago",
@@ -283,7 +185,7 @@ export class CfdiPdf {
             ],
             style: "tableCell",
             alignment: "left",
-          },
+          } : { },
         ],
         this.data.CondicionesDePago && this.data.CondicionesDePago != "" ? [
           {
@@ -381,7 +283,13 @@ export class CfdiPdf {
         alignment: "right",
       },
       {
-        text: currency(parseFloat(`${value.Descuento}`)),
+        text: currency(
+          isNaN(parseFloat(
+            `${value.Descuento}`
+          ))
+          ? 0 
+          : parseFloat(`${value.Descuento}`)
+        ),
         alignment: "right",
       },
     ]);
@@ -520,7 +428,13 @@ export class CfdiPdf {
                 ],
                 [
                   {
-                    text: currency(parseFloat(`${this.data.Descuento}`)),
+                    text: currency(
+                      isNaN(parseFloat(
+                        `${this.data.Descuento}`
+                      ))
+                      ? 0 
+                      : parseFloat(`${this.data.Descuento}`)
+                    ),
                     alignment: "right",
                     bold: true,
                   },
@@ -620,12 +534,19 @@ export class CfdiPdf {
               : [],
             {
               width: this.logo != undefined ? "45%" : "60%",
-              text: this.emisor(),
+              text: emisor(this.data.Emisor, this.data.NoCertificado || ''),
             },
             {
               width: "40%",
               layout: pdfmakeTableLayout,
-              table: this.folio(),
+              table: folio({
+                TipoDeComprobante: this.data.TipoDeComprobante,
+                Serie: this.data?.Serie || '',
+                Fecha: this.data?.Fecha,
+                Folio: this.data?.Folio || '',
+                LugarExpedicion: this.data.LugarExpedicion,
+                VersionPago: this.data.Complemento.Pagos?.Version
+              }),
             },
           ],
         },
@@ -681,7 +602,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.UUID}`,
+                      text: `${this.data.Complemento?.TimbreFiscalDigital?.UUID}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },
@@ -695,7 +616,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.RfcProvCertif}`,
+                      text: `${this.data.Complemento?.TimbreFiscalDigital?.RfcProvCertif}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },
@@ -733,7 +654,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.NoCertificadoSAT}`,
+                      text: `${this.data.Complemento.TimbreFiscalDigital?.NoCertificadoSAT}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },
@@ -747,7 +668,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.SelloSAT}`,
+                      text: `${this.data.Complemento.TimbreFiscalDigital?.SelloSAT}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },
@@ -771,7 +692,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.FechaTimbrado}`,
+                      text: `${this.data.Complemento.TimbreFiscalDigital?.FechaTimbrado}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },
@@ -785,7 +706,7 @@ export class CfdiPdf {
                   ],
                   [
                     {
-                      text: `${this.data.Complemento.TimbreFiscalDigital.SelloCFD}`,
+                      text: `${this.data.Complemento.TimbreFiscalDigital?.SelloCFD}`,
                       fontSize: 4,
                       lineHeight: 1.15,
                     },

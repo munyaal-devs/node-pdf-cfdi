@@ -145,3 +145,4 @@ const getPeriod = (value, digitsToTheRight, periodName) => {
     }
     return name;
 };
+//# sourceMappingURL=numberToText.js.map
