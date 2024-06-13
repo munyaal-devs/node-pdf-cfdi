@@ -2,19 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDataComplement = void 0;
 const getDataComplement = (complement) => {
-    var _a, _b, _c, _d;
     let Complemento = {};
     for (let index = 0; index < complement.length; index++) {
         switch (complement[index].name) {
             case "tfd:TimbreFiscalDigital":
                 Complemento = Object.assign(Complemento, {
-                    TimbreFiscalDigital: Object.assign({}, complement[index].attributes)
+                    TimbreFiscalDigital: { ...complement[index].attributes }
                 });
                 break;
             case "pago20:Pagos":
                 const elementCtp = complement[index].elements || [];
-                // convert.elements[0].elements[index].elements || [];
-                let Pagos = Object.assign(Object.assign({}, complement[index].attributes), { Pago: [] });
+                let Pagos = { ...complement[index].attributes, Pago: [] };
                 if (elementCtp.length > 0) {
                     for (let j = 0; j < elementCtp.length; j++) {
                         switch (elementCtp[j].name) {
@@ -22,12 +20,22 @@ const getDataComplement = (complement) => {
                                 Pagos.Totales = elementCtp[j].attributes;
                                 break;
                             case "pago20:Pago":
-                                let ObjPagoPago = Object.assign(Object.assign({}, elementCtp[j].attributes), { DoctoRelacionado: [] });
+                                //let ObjPagoPago = { ...elementCtp[j].attributes, DoctoRelacionado: [] } as unknown as PagosPagoType;
+                                let ObjPagoPago = {
+                                    RfcEmisorCtaOrd: 'BBA830831LJ2',
+                                    CtaOrdenante: '0100101',
+                                    TipoCadPago: '01',
+                                    CertPago: '00001000000512097613',
+                                    CadPago: '||1|10062024|10062024|171442|40002|BBVA MEXICO|ALEX RAFAEL PECH SANCHEZ|40|012180015959552515|PESA9909047K1|BANAMEX|JAIRO GUILLERMO,LEON/VALDEZ|40|002694904137271458|LEVJ950301Q38|hot dog|0.00|100.00|NA|NA|0|0|NA|0|0.00|00001000000512097613||',
+                                    SelloPago: 'dY3uU5CTFYPpXpc10vObRJKVJiQ3odG9gR4LtqkW/pIYJDkNILSzCSm+nsf/S75GGOQ5piwdh31HhEJPxmc8jdgGOS8fowwivnhX4tsIhmdxtQb0rrJz9OGkf/BDSSLhewGVVWts6aVn+EPViUbCPEGKo8i4OfClWlDTk6Mp0dEdSf5OlxxQhjXlO89Zk4RGTtQ8Hj7lYhVX88NhWeuUb4EXkf/keCuQRahZu5N5QRh0uZyiTzt94KPyyPCcdxmvAp9wqFVB1aGCLL6lQlnBB7fdhpnw6PilzqVcfyR9Gjuw8BoM5Bskc2opVjbaZY7bdt//8RefE9vXreymtek8xg==',
+                                    ...elementCtp[j].attributes,
+                                    DoctoRelacionado: []
+                                };
                                 const elementsPagoPago = elementCtp[j].elements || [];
                                 for (let k = 0; k < elementsPagoPago.length; k++) {
                                     switch (elementsPagoPago[k].name) {
                                         case 'pago20:DoctoRelacionado':
-                                            const DoctoRelacionado = Object.assign({}, elementsPagoPago[k].attributes);
+                                            const DoctoRelacionado = { ...elementsPagoPago[k].attributes };
                                             const elementsPagoPagoDoctoRela = elementsPagoPago[k].elements || [];
                                             for (let l = 0; l < elementsPagoPagoDoctoRela.length; l++) {
                                                 switch (elementsPagoPagoDoctoRela[l].name) {
@@ -38,14 +46,14 @@ const getDataComplement = (complement) => {
                                                             for (let m = 0; m < elementsPagoPagoDoctoRelaImp.length; m++) {
                                                                 switch (elementsPagoPagoDoctoRelaImp[m].name) {
                                                                     case 'pago20:RetencionesDR':
-                                                                        DoctoRelacionado.ImpuestosDR.TrasladosDR = ((_a = elementsPagoPagoDoctoRelaImp[m].elements) === null || _a === void 0 ? void 0 : _a.map((RetencionesDR) => {
-                                                                            return Object.assign({}, RetencionesDR.attributes);
-                                                                        })) || [];
+                                                                        DoctoRelacionado.ImpuestosDR.TrasladosDR = elementsPagoPagoDoctoRelaImp[m].elements?.map((RetencionesDR) => {
+                                                                            return { ...RetencionesDR.attributes };
+                                                                        }) || [];
                                                                         break;
                                                                     case 'pago20:TrasladosDR':
-                                                                        DoctoRelacionado.ImpuestosDR.TrasladosDR = ((_b = elementsPagoPagoDoctoRelaImp[m].elements) === null || _b === void 0 ? void 0 : _b.map((TrasladosDR) => {
-                                                                            return Object.assign({}, TrasladosDR.attributes);
-                                                                        })) || [];
+                                                                        DoctoRelacionado.ImpuestosDR.TrasladosDR = elementsPagoPagoDoctoRelaImp[m].elements?.map((TrasladosDR) => {
+                                                                            return { ...TrasladosDR.attributes };
+                                                                        }) || [];
                                                                         break;
                                                                     default:
                                                                         break;
@@ -66,14 +74,14 @@ const getDataComplement = (complement) => {
                                                 for (let indexImp = 0; indexImp < elementsPagoPagoImpP.length; indexImp++) {
                                                     switch (elementsPagoPagoImpP[indexImp].name) {
                                                         case 'pago20:TrasladosP':
-                                                            ObjPagoPago.ImpuestosP.TrasladosP = ((_c = elementsPagoPagoImpP[indexImp].elements) === null || _c === void 0 ? void 0 : _c.map((TrasladosP) => {
-                                                                return Object.assign({}, TrasladosP.attributes);
-                                                            })) || [];
+                                                            ObjPagoPago.ImpuestosP.TrasladosP = elementsPagoPagoImpP[indexImp].elements?.map((TrasladosP) => {
+                                                                return { ...TrasladosP.attributes };
+                                                            }) || [];
                                                             break;
                                                         case 'pago20:RetencionesP':
-                                                            ObjPagoPago.ImpuestosP.RetencionesP = ((_d = elementsPagoPagoImpP[indexImp].elements) === null || _d === void 0 ? void 0 : _d.map((RetencionesP) => {
-                                                                return Object.assign({}, RetencionesP.attributes);
-                                                            })) || [];
+                                                            ObjPagoPago.ImpuestosP.RetencionesP = elementsPagoPagoImpP[indexImp].elements?.map((RetencionesP) => {
+                                                                return { ...RetencionesP.attributes };
+                                                            }) || [];
                                                             break;
                                                         default:
                                                             break;
@@ -103,4 +111,3 @@ const getDataComplement = (complement) => {
     return Complemento;
 };
 exports.getDataComplement = getDataComplement;
-//# sourceMappingURL=getDataComplement.js.map

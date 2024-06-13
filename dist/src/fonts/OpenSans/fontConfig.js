@@ -9,4 +9,3 @@ exports.fonts = {
         bolditalics: 'OpenSans-BoldItalic.ttf',
     }
 };
-//# sourceMappingURL=fontConfig.js.map

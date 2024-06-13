@@ -10,23 +10,22 @@ Object.defineProperty(exports, "getDataComplement", { enumerable: true, get: fun
 var getDataConcept_2 = require("./getDataConcept");
 Object.defineProperty(exports, "getDataConcept", { enumerable: true, get: function () { return getDataConcept_2.getDataConcept; } });
 const getData = (xml) => {
-    var _a, _b, _c;
     const convert = (0, xml_js_1.xml2js)(xml);
     let data = {};
     const dataCfdiRelacionados = [];
-    if (convert.elements && ((_a = convert.elements) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-        data = Object.assign({}, convert.elements[0].attributes);
+    if (convert.elements && convert.elements?.length > 0) {
+        data = { ...convert.elements[0].attributes };
         if (convert.elements[0].elements) {
             for (let index = 0; index < convert.elements[0].elements.length; index++) {
                 switch (convert.elements[0].elements[index].name) {
                     case "cfdi:Emisor":
                         data = Object.assign(data, {
-                            Emisor: Object.assign({}, convert.elements[0].elements[index].attributes)
+                            Emisor: { ...convert.elements[0].elements[index].attributes }
                         });
                         break;
                     case "cfdi:Receptor":
                         data = Object.assign(data, {
-                            Receptor: Object.assign({}, convert.elements[0].elements[index].attributes)
+                            Receptor: { ...convert.elements[0].elements[index].attributes }
                         });
                         break;
                     case "cfdi:Conceptos":
@@ -42,12 +41,12 @@ const getData = (xml) => {
                                 switch (elementCtp[j].name) {
                                     case "cfdi:Traslados":
                                         Impuestos = Object.assign(Impuestos, {
-                                            Traslados: [...((_b = elementCtp[j].elements) === null || _b === void 0 ? void 0 : _b.map((e) => e.attributes)) || []]
+                                            Traslados: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
                                         });
                                         break;
                                     case "cfdi:Retenciones":
                                         Impuestos = Object.assign(Impuestos, {
-                                            Retenciones: [...((_c = elementCtp[j].elements) === null || _c === void 0 ? void 0 : _c.map((e) => e.attributes)) || []]
+                                            Retenciones: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
                                         });
                                         break;
                                     default:
@@ -56,7 +55,7 @@ const getData = (xml) => {
                             }
                         }
                         data = Object.assign(data, {
-                            Impuestos: Object.assign(Object.assign({}, convert.elements[0].elements[index].attributes), Impuestos)
+                            Impuestos: { ...convert.elements[0].elements[index].attributes, ...Impuestos }
                         });
                         break;
                     case "cfdi:Complemento":
@@ -76,6 +75,7 @@ const getData = (xml) => {
             });
         }
     }
+    console.log(JSON.stringify(data, null, 3));
     return data;
 };
 exports.getData = getData;
@@ -89,4 +89,3 @@ const getUrlQr = (data) => {
     return `?id=${folio}&re=${emisor}&rr=${receptor}&tt=${total}&fe=${timbre}`;
 };
 exports.getUrlQr = getUrlQr;
-//# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pdfmakeDefaultStyle = exports.pdfmakeTableLayout = exports.pdfmakeTableZebraLayout = exports.pdfmakeTableConceptLayout = exports.pdfmakeStyles = void 0;
+exports.pdfmakeDefaultStyle = exports.pdfmakeSubTableLayout = exports.pdfmakeTableLayout = exports.pdfmakeTableZebraLayout = exports.pdfmakeTableConceptLayout = exports.pdfmakeStyles = void 0;
 exports.pdfmakeStyles = {
     tableCell: {
         lineHeight: 1.15
@@ -34,6 +34,12 @@ exports.pdfmakeTableLayout = {
     },
     defaultBorder: false,
 };
+exports.pdfmakeSubTableLayout = {
+    fillColor: (rowIndex, node, columnIndex) => {
+        return (rowIndex === 0) ? '#F0F0F0' : null;
+    },
+    defaultBorder: false,
+};
 exports.pdfmakeDefaultStyle = {
     font: 'OpenSans',
     columnGap: 5,
@@ -41,4 +47,3 @@ exports.pdfmakeDefaultStyle = {
     lineHeight: 1.25,
     color: '#595959',
 };
-//# sourceMappingURL=pdfmake.config.js.map

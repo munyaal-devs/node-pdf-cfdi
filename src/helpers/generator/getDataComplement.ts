@@ -19,7 +19,6 @@ export const getDataComplement = (complement: Array<Element>) => {
                 break;
             case "pago20:Pagos":
                 const elementCtp = complement[index].elements || [];
-                // convert.elements[0].elements[index].elements || [];
                 let Pagos = { ...complement[index].attributes, Pago: [] } as unknown as PagosType;
                 if (elementCtp.length > 0) {
                     for (let j = 0; j < elementCtp.length; j++) {

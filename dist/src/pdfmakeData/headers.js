@@ -21,7 +21,6 @@ const getLogo = (path) => {
 };
 exports.getLogo = getLogo;
 const emisor = (Emisor, NoCertificado) => {
-    var _a;
     return [
         { text: `${Emisor.Nombre}`, bold: true, fontSize: 10 },
         "\n",
@@ -30,7 +29,7 @@ const emisor = (Emisor, NoCertificado) => {
         "\n\n",
         { text: "Régimen fiscal: " },
         {
-            text: `${Emisor.RegimenFiscal} - ${(_a = (0, cfdi_catalogs_1.searchOption)(Emisor.RegimenFiscal, cfdi_catalogs_1.CatalogEnum.RegimenFiscal)) === null || _a === void 0 ? void 0 : _a.description}`,
+            text: `${Emisor.RegimenFiscal} - ${(0, cfdi_catalogs_1.searchOption)(Emisor.RegimenFiscal, cfdi_catalogs_1.CatalogEnum.RegimenFiscal)?.description}`,
             bold: true,
         },
         "\n",
@@ -43,11 +42,10 @@ const emisor = (Emisor, NoCertificado) => {
 };
 exports.emisor = emisor;
 const folio = (data) => {
-    var _a;
     const { TipoDeComprobante, Folio, Serie, Fecha, LugarExpedicion, VersionPago } = data;
     let labelTipoComprobante = TipoDeComprobante == tipo_comprobante_enum_1.TipoComprobanteEnum.P
         ? `Recibo electrónico de pagos ${VersionPago}`
-        : `CFDI de ${(_a = (0, cfdi_catalogs_1.searchOption)(TipoDeComprobante, cfdi_catalogs_1.CatalogEnum.TipoDeComprobante)) === null || _a === void 0 ? void 0 : _a.description}`;
+        : `CFDI de ${(0, cfdi_catalogs_1.searchOption)(TipoDeComprobante, cfdi_catalogs_1.CatalogEnum.TipoDeComprobante)?.description}`;
     return {
         widths: ["*", "*"],
         body: [
@@ -104,4 +102,3 @@ const folio = (data) => {
     };
 };
 exports.folio = folio;
-//# sourceMappingURL=headers.js.map

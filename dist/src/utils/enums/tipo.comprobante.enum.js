@@ -27,4 +27,3 @@ var TipoComprobanteEnum;
     * */
     TipoComprobanteEnum["P"] = "P";
 })(TipoComprobanteEnum = exports.TipoComprobanteEnum || (exports.TipoComprobanteEnum = {}));
-//# sourceMappingURL=tipo.comprobante.enum.js.map

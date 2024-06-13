@@ -40,4 +40,3 @@ const getTotalText = (value) => {
     return `${n1} ${n2}`.toUpperCase();
 };
 exports.getTotalText = getTotalText;
-//# sourceMappingURL=index.js.map

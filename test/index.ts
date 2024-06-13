@@ -9,7 +9,7 @@ export const bootstrap = () => {
   const pathLogo = "/var/www/development/logos/logo.jpg";
   const pdf = new CfdiPdf(xml, cadena);
 
-  //pdf.createDocument(`${new Date().getTime()}`, `${process.cwd()}/src/pdfs/`);
+  pdf.createDocument(`${new Date().getTime()}`, `${process.cwd()}/src/pdfs/`);
 };
 
 bootstrap();

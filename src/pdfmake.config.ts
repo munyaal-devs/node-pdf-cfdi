@@ -37,6 +37,13 @@ export const pdfmakeTableLayout: TableLayout = {
     defaultBorder: false,
 }
 
+export const pdfmakeSubTableLayout: TableLayout = {
+    fillColor: (rowIndex, node, columnIndex) => {
+        return (rowIndex === 0) ? '#F0F0F0' : null;
+    },
+    defaultBorder: false,
+}
+
 export const pdfmakeDefaultStyle: Style = {
     font: 'OpenSans',
     columnGap: 5,

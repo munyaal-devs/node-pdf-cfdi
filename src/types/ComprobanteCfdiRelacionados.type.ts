@@ -2,5 +2,5 @@ import { ComprobanteCfdiRelacionadosCfdiRelacionado } from "./childs/CfdiRelacio
 import { AttributesComprobanteCfdiRelacionadosElement } from "./elements/comprobante.cfdi.relacionados.element";
 
 export type ComprobanteCfdiRelacionadosType = {
-    CfdiRelacionado: ComprobanteCfdiRelacionadosCfdiRelacionado;
+    CfdiRelacionado: ComprobanteCfdiRelacionadosCfdiRelacionado[];
 } & AttributesComprobanteCfdiRelacionadosElement;

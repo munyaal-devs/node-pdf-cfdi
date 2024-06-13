@@ -22,4 +22,3 @@ __exportStar(require("./ComprobanteReceptor.type"), exports);
 __exportStar(require("./ComprobanteConcepto.type"), exports);
 __exportStar(require("./ComprobanteImpuestos.type"), exports);
 __exportStar(require("./ComprobanteComplemento.type"), exports);
-//# sourceMappingURL=index.js.map
