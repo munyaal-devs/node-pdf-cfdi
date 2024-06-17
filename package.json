@@ -1,6 +1,6 @@
 {
   "name": "@munyaal/cfdi-pdf",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "files": [
     "dist/**"
@@ -15,13 +15,13 @@
   "author": "Munyaal Apps",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.14.2",
     "@types/pdfmake": "^0.2.2",
-    "rimraf": "^4.1.1",
-    "typescript": "^4.9.4"
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@munyaal/cfdi-catalogs": "^1.0.0-beta.2",
+    "@munyaal/cfdi-catalogs": "^1.0.1",
     "pdfmake": "^0.2.7",
     "xml-js": "^1.6.11"
   }
