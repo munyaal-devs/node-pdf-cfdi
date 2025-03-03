@@ -42,11 +42,11 @@ export const concept = (value: ComprobanteConceptoType, withImpuestos: boolean):
       },
     ]);
   }
-  if (value.ComplementoConcepto) {
-    if (value?.ComplementoConcepto?.iedu) {
+  if (!!Object.getOwnPropertyNames(value.ComplementoConcepto).length) {
+    if (!!Object.getOwnPropertyNames(value?.ComplementoConcepto?.iedu).length) {
       table.push([
         {
-          text: `Alumno: ${value.ComplementoConcepto.iedu.nombreAlumno} CURP: ${value.ComplementoConcepto.iedu.CURP} Nivel educativo: ${value.ComplementoConcepto.iedu.nivelEducativo} Clave: ${value.ComplementoConcepto.iedu.autRVOE} RFC: ${value.ComplementoConcepto.iedu.rfcPago}`,
+          text: `Alumno: ${value.ComplementoConcepto?.iedu?.nombreAlumno} CURP: ${value.ComplementoConcepto?.iedu?.CURP} Nivel educativo: ${value.ComplementoConcepto?.iedu?.nivelEducativo} Clave: ${value.ComplementoConcepto?.iedu?.autRVOE} RFC: ${value.ComplementoConcepto?.iedu?.rfcPago}`,
           fontSize: 6,
           lineHeight: 1,
         },

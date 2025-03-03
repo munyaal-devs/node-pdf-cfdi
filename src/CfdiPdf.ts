@@ -5,11 +5,10 @@ import {
 import PdfMake from "pdfmake/build/pdfmake";
 import { fontBase64 } from "./fonts/OpenSans/fontBase64";
 import { fonts } from "./fonts/OpenSans/fontConfig";
-import { writeFile, readFileSync } from "fs";
+import { writeFile } from "fs";
 import {
   pdfmakeDefaultStyle,
   pdfmakeStyles,
-  pdfmakeTableConceptLayout,
   pdfmakeTableLayout,
   pdfmakeTableZebraLayout,
 } from "./pdfmake.config";
