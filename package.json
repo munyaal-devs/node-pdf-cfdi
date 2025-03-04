@@ -1,28 +1,29 @@
 {
   "name": "@munyaal/cfdi-pdf",
-  "version": "1.0.5",
-  "description": "",
+  "version": "1.0.6",
+  "description": "Librería para generar PDFs a partir de CFDI en Node.js",
   "files": [
     "dist/**"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf ./dist && tsc --build",
+    "prebuild": "rimraf ./dist",
+    "build": "tsc --build",
     "pretest": "npm run build",
     "test": "node ./dist/test/index.js"
   },
   "author": "Munyaal Apps",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "@types/pdfmake": "^0.2.2",
-    "rimraf": "^5.0.7",
-    "typescript": "^5.4.5"
+    "@types/node": "^22.13.9",
+    "@types/pdfmake": "^0.2.11",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@munyaal/cfdi-catalogs": "^1.0.1",
-    "pdfmake": "^0.2.7",
+    "pdfmake": "^0.2.18",
     "xml-js": "^1.6.11"
   }
 }
