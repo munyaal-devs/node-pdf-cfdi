@@ -2,6 +2,10 @@
   "name": "@munyaal/cfdi-pdf",
   "version": "1.0.6",
   "description": "Librería para generar PDFs a partir de CFDI en Node.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/munyaal-devs/node-pdf-cfdi.git"
+  },
   "files": [
     "dist/**"
   ],
