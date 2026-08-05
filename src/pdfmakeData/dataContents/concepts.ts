@@ -42,8 +42,8 @@ export const concept = (value: ComprobanteConceptoType, withImpuestos: boolean):
       },
     ]);
   }
-  if (!!Object.getOwnPropertyNames(value.ComplementoConcepto).length) {
-    if (!!Object.getOwnPropertyNames(value?.ComplementoConcepto?.iedu).length) {
+  if (value?.ComplementoConcepto && !!Object.getOwnPropertyNames(value.ComplementoConcepto).length) {
+    if (value.ComplementoConcepto?.iedu && !!Object.getOwnPropertyNames(value?.ComplementoConcepto?.iedu).length) {
       table.push([
         {
           text: `Alumno: ${value.ComplementoConcepto?.iedu?.nombreAlumno} CURP: ${value.ComplementoConcepto?.iedu?.CURP} Nivel educativo: ${value.ComplementoConcepto?.iedu?.nivelEducativo} Clave: ${value.ComplementoConcepto?.iedu?.autRVOE} RFC: ${value.ComplementoConcepto?.iedu?.rfcPago}`,
