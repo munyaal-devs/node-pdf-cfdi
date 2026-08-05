@@ -2,91 +2,96 @@ import { Element, xml2js } from "xml-js";
 import { getDataComplement } from "./getDataComplement";
 import { getDataConcept } from "./getDataConcept";
 import { getDataRelacionados } from "./getDataRelacionados";
-import { ComprobanteType } from "../../types";
+import { findChild, findChildAttributes, getAttributes } from "./utils";
+import { ComprobanteImpuestosType, ComprobanteType } from "../../types";
+import { AttributesComprobanteImpuestosElement } from "../../types/elements/comprobante.cfdi.impuestos.element";
 
 export { getDataComplement } from "./getDataComplement";
 export { getDataConcept } from "./getDataConcept";
 
-export const getData = (xml: string) => {
+/**
+ * Parsea el nodo `cfdi:Impuestos` del comprobante, conservando sus
+ * atributos y separando Traslados / Retenciones.
+ */
+const parseImpuestos = (element: Element): ComprobanteImpuestosType => {
+    const children = element.elements ?? [];
+
+    return {
+        ...(getAttributes(element) as AttributesComprobanteImpuestosElement),
+        Traslados: findChildAttributes(children, "cfdi:Traslados"),
+        Retenciones: findChildAttributes(children, "cfdi:Retenciones"),
+    } as ComprobanteImpuestosType;
+};
+
+export const getData = (xml: string): ComprobanteType => {
     const convert = xml2js(xml) as Element;
+    const root = convert.elements?.[0];
+
     let data = {} as ComprobanteType;
-    const dataCfdiRelacionados = []
-    if (convert.elements && convert.elements?.length > 0) {
-        data = { ...convert.elements[0].attributes } as unknown as ComprobanteType;
-        if (convert.elements[0].elements) {
-            for (let index = 0; index < convert.elements[0].elements.length; index++) {
-                switch (convert.elements[0].elements[index].name) {
-                    case "cfdi:Emisor":
-                        data = Object.assign(data, {
-                            Emisor: { ...convert.elements[0].elements[index].attributes }
-                        });
-                        break;
-                    case "cfdi:Receptor":
-                        data = Object.assign(data, {
-                            Receptor: { ...convert.elements[0].elements[index].attributes }
-                        });
-                        break;
-                    case "cfdi:Conceptos":
-                        data = Object.assign(data, {
-                            Conceptos: getDataConcept(convert.elements[0].elements[index].elements || []),
-                        });
-                        break;
-                    case "cfdi:Impuestos":
-                        const elementCtp = convert.elements[0].elements[index].elements || [];
-                        let Impuestos = { } as any;
-                        if (elementCtp.length > 0) {
-                            for (let j = 0; j < elementCtp.length; j++) {
-                                switch (elementCtp[j].name) {
-                                    case "cfdi:Traslados":
-                                        Impuestos = Object.assign(Impuestos, {
-                                            Traslados: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
-                                        });
-                                        break;
-                                    case "cfdi:Retenciones":
-                                        Impuestos = Object.assign(Impuestos, {
-                                            Retenciones: [...elementCtp[j].elements?.map((e) => e.attributes) || []]
-                                        });
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                        data = Object.assign(data, {
-                            Impuestos: { ...convert.elements[0].elements[index].attributes, ...Impuestos }
-                        });
-                        break;
-                    case "cfdi:Complemento":
-                        data = Object.assign(data, {
-                            Complemento: getDataComplement(convert.elements[0].elements[index].elements || [])
-                        });
-                        break;
-                    case "cfdi:CfdiRelacionados":
-                        dataCfdiRelacionados.push(convert.elements[0].elements[index])
-                        break;
-                    default:
-                        break;
-                }
-            }
-            data = Object.assign(data, {
-                CfdiRelacionados: getDataRelacionados(dataCfdiRelacionados || []),
-            });
-        }
 
+    if (!root) {
+        return data;
     }
-    
+
+    data = { ...getAttributes(root) } as unknown as ComprobanteType;
+
+    const relacionados: Element[] = [];
+
+    for (const child of root.elements ?? []) {
+        switch (child.name) {
+            case "cfdi:Emisor":
+                data = { ...data, Emisor: { ...getAttributes(child) } } as ComprobanteType;
+                break;
+            case "cfdi:Receptor":
+                data = { ...data, Receptor: { ...getAttributes(child) } } as ComprobanteType;
+                break;
+            case "cfdi:Conceptos":
+                data = {
+                    ...data,
+                    Conceptos: getDataConcept(child.elements ?? []),
+                } as ComprobanteType;
+                break;
+            case "cfdi:Impuestos":
+                data = { ...data, Impuestos: parseImpuestos(child) } as ComprobanteType;
+                break;
+            case "cfdi:Complemento":
+                data = {
+                    ...data,
+                    Complemento: getDataComplement(child.elements ?? []),
+                } as ComprobanteType;
+                break;
+            case "cfdi:CfdiRelacionados":
+                relacionados.push(child);
+                break;
+            default:
+                break;
+        }
+    }
+
+    data = {
+        ...data,
+        CfdiRelacionados: getDataRelacionados(relacionados),
+    } as ComprobanteType;
+
     return data;
-}
+};
 
-export const getUrlQr = (data: any) => {
-    const folio = `${data.Complemento.TimbreFiscalDigital.UUID}`;
-    const emisor = `${data.Emisor.Rfc}`;
-    const receptor = `${data.Receptor.Rfc}`
-    
-    const totalSplit = data.Total.split('.');
+export const getUrlQr = (data: ComprobanteType): string => {
+    const folio = `${data.Complemento?.TimbreFiscalDigital?.UUID ?? ""}`;
+    const emisor = `${data.Emisor?.Rfc ?? ""}`;
+    const receptor = `${data.Receptor?.Rfc ?? ""}`;
 
-    const total = `${totalSplit[0].padStart(18, '0')}.${totalSplit[1] ? totalSplit[1].padEnd(6, '0') : '0'.padEnd(6, '0')}`
-    const timbre = `${data.Complemento.TimbreFiscalDigital.SelloCFD.substring(data.Complemento.TimbreFiscalDigital.SelloCFD.length - 8)}`;
+    // `Total` puede ser undefined o vacío (comprobantes tipo "P"); en ese caso
+    // usamos "0" como total para no romper el armado de la URL.
+    const rawTotal = data.Total ?? "0";
+    const totalValue = rawTotal === "" ? "0" : rawTotal;
+    const totalSplit = totalValue.split(".");
+    const parteEntera = `${totalSplit[0]}`.padStart(18, "0");
+    const parteDecimal = totalSplit[1] ? `${totalSplit[1]}`.padEnd(6, "0") : "0".padEnd(6, "0");
+    const total = `${parteEntera}.${parteDecimal}`;
 
-    return `?id=${folio}&re=${emisor}&rr=${receptor}&tt=${total}&fe=${timbre}`
-}
+    const sello = `${data.Complemento?.TimbreFiscalDigital?.SelloCFD ?? ""}`;
+    const timbre = sello.substring(sello.length - 8);
+
+    return `?id=${folio}&re=${emisor}&rr=${receptor}&tt=${total}&fe=${timbre}`;
+};
